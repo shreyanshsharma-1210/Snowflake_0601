@@ -8,25 +8,12 @@ import { useResponsiveScale } from "@/hooks/use-scale";
 import {
   Home,
   Brain,
-  MessageSquare,
-  Users,
-  Calendar,
-  Settings,
   ChevronLeft,
   ChevronRight,
-  Package,
-  ShoppingCart,
-  LogOut,
-  Edit,
-  Star,
   Cpu,
-  Syringe,
   Ambulance,
   Watch,
-  Heart,
   Building2,
-  Droplets,
-  User,
   FileText,
   Stethoscope,
 } from "lucide-react";
@@ -58,16 +45,34 @@ export const FloatingSidebar = ({
   const menuItems: MenuItem[] = [
     { id: "home", label: "Dashboard", icon: Home, href: "/dashboard" },
     {
+      id: "government-yojana",
+      label: "Government Yojana",
+      icon: Building2,
+      href: "/dashboard/government-yojana",
+    },
+    {
       id: "chatbot",
       label: "AI Chat",
       icon: Brain,
       href: "/dashboard/chatbot",
     },
     {
-      id: "mindspace",
-      label: "MindSpace",
-      icon: Heart,
-      href: "/dashboard/mindspace",
+      id: "teleconsultation",
+      label: "Teleconsultation",
+      icon: Stethoscope,
+      href: "/dashboard/doctor-categories",
+    },
+    {
+      id: "ambulance",
+      label: "Ambulance and SOS",
+      icon: Ambulance,
+      href: "/dashboard/ambulance-services",
+    },
+    {
+      id: "clinical-profile",
+      label: "Health Resume",
+      icon: FileText,
+      href: "/dashboard/clinical-profile",
     },
     {
       id: "exercise",
@@ -76,46 +81,10 @@ export const FloatingSidebar = ({
       href: "/dashboard/exercise-guidance",
     },
     {
-      id: "disease-detection",
-      label: "Disease Detection",
-      icon: Star,
-      href: "/dashboard/disease-detection",
-    },
-    {
-      id: "government-yojana",
-      label: "Government Yojana",
-      icon: Building2,
-      href: "/dashboard/government-yojana",
-    },
-    {
-      id: "vaccination",
-      label: "Vaccination",
-      icon: Syringe,
-      href: "/dashboard/vaccination-tracker",
-    },
-    {
-      id: "ambulance",
-      label: "Ambulance Services",
-      icon: Ambulance,
-      href: "/dashboard/ambulance-services",
-    },
-    {
       id: "miband",
       label: "Mi Band 4",
       icon: Watch,
       href: "/dashboard/miband",
-    },
-    {
-      id: "clinical-profile",
-      label: "Clinical Profile",
-      icon: FileText,
-      href: "/dashboard/clinical-profile",
-    },
-    {
-      id: "teleconsultation",
-      label: "Teleconsultation",
-      icon: Stethoscope,
-      href: "/dashboard/doctor-categories",
     },
   ];
 
@@ -141,8 +110,8 @@ export const FloatingSidebar = ({
       {/* Sidebar - Always visible, scales on mobile */}
       <motion.div
         layout
-        className={`fixed left-4 top-4 bottom-4 ${isCollapsed ? "w-16" : "w-64"
-          } z-50 max-h-screen`}
+        className={`fixed left-0 top-0 h-screen ${isCollapsed ? "w-16" : "w-64"
+          } z-50`}
         animate={{ width: isCollapsed ? 64 : 256 }}
         transition={{ duration: 0.45, ease: [0.2, 0.9, 0.2, 1] }}
         style={{
@@ -151,10 +120,10 @@ export const FloatingSidebar = ({
         }}
       >
         {/* Smooth Off-White Glass Sidebar */}
-        <div className="h-full sidebar-glass">
+        <div className="h-full bg-sidebar border-r border-sidebar-border flex flex-col rounded-none">
           {/* Logo Section */}
           <motion.div
-            className="p-4 border-b border-white/30 transition-colors duration-300"
+            className="p-4 border-b border-white/30 transition-colors duration-300 flex-shrink-0"
             initial={false}
           >
             <div className="flex items-center gap-3">
@@ -182,7 +151,7 @@ export const FloatingSidebar = ({
 
           {/* Toggle Button */}
           <motion.button
-            className="absolute -right-3 top-6 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 text-gray-600 hover:text-gray-800"
+            className="absolute -right-3 top-6 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300 text-gray-600 hover:text-gray-800 z-50"
             style={{
               background: "rgba(255, 255, 255, 0.85)",
               backdropFilter: "blur(8px)",
@@ -198,7 +167,7 @@ export const FloatingSidebar = ({
           </motion.button>
 
           {/* Navigation Menu */}
-          <div className={`flex-1 p-3 space-y-1 relative flex flex-col ${isCollapsed ? 'justify-center items-center' : 'justify-start items-stretch'}`}>
+          <div className={`flex-1 p-3 space-y-1 relative flex flex-col ${isCollapsed ? 'justify-start items-center' : 'justify-start items-stretch'}`}>
             {menuItems.map((item, index) => (
               <motion.button
                 key={item.id}
@@ -258,7 +227,7 @@ export const FloatingSidebar = ({
           <AnimatePresence>
             {!isCollapsed && (
               <motion.div
-                className="p-3 border-t border-gray-200/50"
+                className="p-3 border-t border-gray-200/50 flex-shrink-0"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}

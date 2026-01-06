@@ -272,7 +272,7 @@ const states = [
 ];
 
 export default function GovernmentYojana() {
-  const { isCollapsed } = useSidebar();
+  const { isCollapsed, setIsCollapsed } = useSidebar();
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const [selectedState, setSelectedState] = useState<string>("");
   const [selectedScheme, setSelectedScheme] = useState<string>("");
@@ -283,7 +283,7 @@ export default function GovernmentYojana() {
 
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => { }} />
+      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
       <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}>
         <header className="mb-8 text-center">
@@ -481,7 +481,7 @@ export default function GovernmentYojana() {
         </motion.div>
 
         {/* Schemes Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           {filteredSchemes.map((scheme, index) => (
             <motion.div
               key={scheme.id}
