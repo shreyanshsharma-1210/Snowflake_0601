@@ -229,7 +229,7 @@ export default function Chatbot() {
   const initializeVapi = useCallback(() => {
     // Check for public key specifically
     // Hardcoded API key
-    const keyToUse = "db1e9da3-b453-4b22-af2e-02c742d81b68";
+    const keyToUse = "40b45ea0-7541-40e7-bb44-5d8ddf6c56bc";
 
     if (!keyToUse) {
       console.error("❌ No valid API key available");
