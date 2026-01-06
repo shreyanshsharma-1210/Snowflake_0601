@@ -43,7 +43,7 @@ export const FloatingSidebar = ({
   const scale = useResponsiveScale(1024, 0.65); // Minimum 65% scale
 
   const menuItems: MenuItem[] = [
-    { id: "home", label: "ArogyaSaarthi", icon: Home, href: "/dashboard" },
+    { id: "home", label: "Dashboard", icon: Home, href: "/dashboard" },
     {
       id: "government-yojana",
       label: "Government Yojana",
@@ -142,7 +142,7 @@ export const FloatingSidebar = ({
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
                   >
-                    Dashboard
+                    ArogyaSaarthi
                   </motion.span>
                 )}
               </AnimatePresence>
