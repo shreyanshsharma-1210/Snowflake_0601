@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
@@ -171,9 +171,9 @@ export default function DoctorsByCategory() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-white via-[#f8fbff] to-[#eef2ff]">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
 
-      <div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28`}>
+
+      <div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}>
         <div className="mx-auto w-full max-w-6xl px-6 pb-16">
           <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">
@@ -211,7 +211,7 @@ export default function DoctorsByCategory() {
                   <CardHeader className="flex-row items-center gap-4">
                     <Avatar className="h-12 w-12">
                       <AvatarImage src={doc.avatarUrl} alt={doc.name} />
-                      <AvatarFallback>{doc.name.split(" ").map(p=>p[0]).join("")}</AvatarFallback>
+                      <AvatarFallback>{doc.name.split(" ").map(p => p[0]).join("")}</AvatarFallback>
                     </Avatar>
                     <div>
                       <CardTitle className="dashboard-title text-lg font-semibold tracking-tight">{doc.name}</CardTitle>
@@ -221,7 +221,7 @@ export default function DoctorsByCategory() {
                   </CardHeader>
                   <CardContent className="flex items-center justify-between">
                     <div className="flex flex-wrap gap-2">
-                      {doc.slots.slice(0,3).map((s) => (
+                      {doc.slots.slice(0, 3).map((s) => (
                         <span key={s} className="rounded-full bg-blue-50 text-blue-700 px-3 py-1 text-xs border border-blue-200">{s}</span>
                       ))}
                     </div>
@@ -285,11 +285,11 @@ export default function DoctorsByCategory() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-xs">Name</Label>
-                  <Input id="name" value={form.name} onChange={(e)=>setForm(v=>({...v, name: e.target.value}))} className="h-9 text-sm" placeholder="e.g. John Doe" />
+                  <Input id="name" value={form.name} onChange={(e) => setForm(v => ({ ...v, name: e.target.value }))} className="h-9 text-sm" placeholder="e.g. John Doe" />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email" className="text-xs">Email</Label>
-                  <Input id="email" type="email" value={form.email} onChange={(e)=>setForm(v=>({...v, email: e.target.value}))} className="h-9 text-sm" placeholder="e.g. john@example.com" />
+                  <Input id="email" type="email" value={form.email} onChange={(e) => setForm(v => ({ ...v, email: e.target.value }))} className="h-9 text-sm" placeholder="e.g. john@example.com" />
                 </div>
                 <Button className="w-full" onClick={confirmAppointment} disabled={createAppointment.isPending}>
                   {createAppointment.isPending ? "Confirming..." : "Confirm Appointment"}

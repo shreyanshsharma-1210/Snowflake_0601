@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSidebar } from "@/contexts/SidebarContext";
@@ -60,11 +60,11 @@ export default function Dashboard() {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       {/* Main Content - Scales down on mobile while maintaining layout */}
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6 text-sm`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6 text-sm`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
         style={{
           ...getScaleStyles(scale),
@@ -114,7 +114,7 @@ export default function Dashboard() {
                       >
                         View Health Summary
                       </Button>
-                      <Button 
+                      <Button
                         variant="outline"
                         onClick={() => navigateToPage('/dashboard/doctors/general')}
                       >
@@ -638,7 +638,7 @@ export default function Dashboard() {
                       Live
                     </span>
                   </div>
-                  
+
                   {/* Interactive Heatmap Grid */}
                   <div className="grid grid-cols-4 gap-2 mb-4">
                     {[
@@ -661,13 +661,13 @@ export default function Dashboard() {
                       >
                         <div className="text-xs font-medium text-gray-800">{item.specialty}</div>
                         <div className="text-xs text-gray-600">{item.count} online</div>
-                        <div 
+                        <div
                           className={`absolute top-1 right-1 w-2 h-2 rounded-full ${item.color} opacity-60`}
                         />
                       </div>
                     ))}
                   </div>
-                  
+
                   {/* Quick Actions */}
                   <div className="flex gap-2">
                     <Button

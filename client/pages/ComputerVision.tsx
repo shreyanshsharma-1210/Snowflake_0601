@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import {
   Camera,
@@ -126,11 +126,11 @@ export default function ComputerVision() {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       {/* Main Content */}
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
       >
         {/* Header */}
@@ -170,11 +170,10 @@ export default function ComputerVision() {
             {mlModels.map((model, index) => (
               <motion.div
                 key={model.id}
-                className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                  selectedModel === model.id
+                className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${selectedModel === model.id
                     ? "border-purple-300 bg-purple-50"
                     : "border-white/50 bg-white/30 hover:bg-white/50"
-                }`}
+                  }`}
                 onClick={() => setSelectedModel(model.id)}
                 whileHover={{ scale: 1.02 }}
                 initial={{ opacity: 0, y: 20 }}
@@ -203,13 +202,12 @@ export default function ComputerVision() {
                         {model.type}
                       </span>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          model.status === "active"
+                        className={`text-xs px-2 py-1 rounded-full ${model.status === "active"
                             ? "bg-green-100 text-green-600"
                             : model.status === "training"
                               ? "bg-yellow-100 text-yellow-600"
                               : "bg-blue-100 text-blue-600"
-                        }`}
+                          }`}
                       >
                         {model.status}
                       </span>

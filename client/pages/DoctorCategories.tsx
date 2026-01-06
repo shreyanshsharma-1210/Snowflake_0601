@@ -1,6 +1,6 @@
 import React from "react";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
@@ -26,9 +26,9 @@ export default function DoctorCategories() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-white via-[#f8fbff] to-[#eef2ff]">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
 
-      <div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28`}>
+
+      <div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}>
         <div className="mx-auto w-full max-w-6xl px-6 pb-16">
           <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="space-y-1">

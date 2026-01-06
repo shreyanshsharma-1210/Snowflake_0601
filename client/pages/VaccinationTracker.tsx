@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -488,10 +488,10 @@ export default function VaccinationTracker() {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       <div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
       >
         <div className="mx-auto w-full max-w-6xl px-6 pb-16">
           <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">

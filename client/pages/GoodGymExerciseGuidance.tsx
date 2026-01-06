@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -24,7 +24,7 @@ export default function GoodGymExerciseGuidance() {
   const [duration, setDuration] = useState(0);
   const [postureState, setPostureState] = useState<"good" | "ok" | "bad">("good");
   const [audioFeedback, setAudioFeedback] = useState(true);
-  
+
   // Exercise detection state
   const [selectedExercise, setSelectedExercise] = useState<string>("squats");
   const [availableExercises, setAvailableExercises] = useState<Record<string, Exercise>>({});
@@ -33,11 +33,11 @@ export default function GoodGymExerciseGuidance() {
   const [poseDetected, setPoseDetected] = useState(false);
   const [lastRepTime, setLastRepTime] = useState(0);
   const [frameRate, setFrameRate] = useState(0);
-  
+
   // Camera state
   const [cameraActive, setCameraActive] = useState(false);
   const [cameraError, setCameraError] = useState<string>("");
-  
+
   // Refs
   const timerRef = useRef<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -85,7 +85,7 @@ export default function GoodGymExerciseGuidance() {
         video: { width: 640, height: 480, frameRate: 10 },
         audio: false
       });
-      
+
       streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
@@ -113,16 +113,16 @@ export default function GoodGymExerciseGuidance() {
   // Simple exercise simulation
   const simulateExerciseDetection = useCallback(() => {
     if (!sessionActive || paused) return;
-    
+
     const currentTime = Date.now();
     const timeSinceLastRep = currentTime - lastRepTime;
-    
+
     // Simulate exercise detection every 3-5 seconds
     if (timeSinceLastRep > 3000 + Math.random() * 2000) {
       setReps(prev => prev + 1);
       setLastRepTime(currentTime);
       setExerciseStage("completed");
-      
+
       // Audio feedback
       if (audioFeedback) {
         try {
@@ -135,17 +135,17 @@ export default function GoodGymExerciseGuidance() {
           console.error('Audio feedback error:', error);
         }
       }
-      
+
       // Reset stage after a moment
       setTimeout(() => {
         setExerciseStage("detecting");
       }, 1000);
     }
-    
+
     // Update angle simulation
     setCurrentAngle(90 + Math.sin(currentTime / 1000) * 30);
     setPoseDetected(cameraActive);
-    
+
     // Update frame rate simulation
     setFrameRate(cameraActive ? 8 + Math.random() * 4 : 0);
   }, [sessionActive, paused, lastRepTime, audioFeedback, cameraActive]);
@@ -188,7 +188,7 @@ export default function GoodGymExerciseGuidance() {
     setSessionActive(false);
     setPaused(false);
     stopCamera();
-    
+
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
@@ -212,9 +212,9 @@ export default function GoodGymExerciseGuidance() {
 
   // Memoized values
   const postureColor = useMemo(() => {
-    return postureState === "good" ? "bg-green-100 border-green-300" : 
-           postureState === "ok" ? "bg-yellow-100 border-yellow-300" : 
-           "bg-red-100 border-red-300";
+    return postureState === "good" ? "bg-green-100 border-green-300" :
+      postureState === "ok" ? "bg-yellow-100 border-yellow-300" :
+        "bg-red-100 border-red-300";
   }, [postureState]);
 
   const formatDuration = (seconds: number) => {
@@ -239,10 +239,10 @@ export default function GoodGymExerciseGuidance() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
       >
         <header className="mb-6">
@@ -254,7 +254,7 @@ export default function GoodGymExerciseGuidance() {
 
         {/* Main Exercise Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          
+
           {/* Video Feed - Large Section */}
           <div className="lg:col-span-2">
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
@@ -265,7 +265,7 @@ export default function GoodGymExerciseGuidance() {
                   <span className="text-sm font-medium">{cameraActive ? 'Camera Active' : 'Camera Inactive'}</span>
                 </div>
               </div>
-              
+
               <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                 <video
                   ref={videoRef}
@@ -274,9 +274,9 @@ export default function GoodGymExerciseGuidance() {
                   muted
                   style={{ display: cameraActive ? 'block' : 'none' }}
                 />
-                
+
                 <canvas ref={canvasRef} style={{ display: 'none' }} />
-                
+
                 {/* Camera inactive state */}
                 {!cameraActive && (
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -284,7 +284,7 @@ export default function GoodGymExerciseGuidance() {
                     <p className="text-gray-500 text-sm">Camera will activate when session starts</p>
                   </div>
                 )}
-                
+
                 {/* Exercise info overlay */}
                 {sessionActive && (
                   <div className="absolute bottom-4 left-4 right-4">
@@ -303,7 +303,7 @@ export default function GoodGymExerciseGuidance() {
                   </div>
                 )}
               </div>
-              
+
               {cameraError && (
                 <Alert className="mt-4 border-red-200 bg-red-50">
                   <AlertDescription className="text-red-700">
@@ -316,7 +316,7 @@ export default function GoodGymExerciseGuidance() {
 
           {/* Exercise Controls & Stats */}
           <div className="space-y-6">
-            
+
             {/* Session Control */}
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
               <div className="flex items-center justify-between mb-4">
@@ -372,7 +372,7 @@ export default function GoodGymExerciseGuidance() {
                     </Button>
                   </div>
                 )}
-                
+
                 <Button
                   onClick={resetSession}
                   variant="outline"
@@ -400,26 +400,26 @@ export default function GoodGymExerciseGuidance() {
             {/* Exercise Stats */}
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">📊 Session Stats</h3>
-              
+
               <div className="space-y-4">
                 {/* Reps Counter */}
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600">{reps}</div>
                   <div className="text-sm text-gray-600">Repetitions</div>
                 </div>
-                
+
                 {/* Duration */}
                 <div className="text-center">
                   <div className="text-xl font-semibold text-gray-800">{formatDuration(duration)}</div>
                   <div className="text-sm text-gray-600">Duration</div>
                 </div>
-                
+
                 {/* Current Angle */}
                 <div className="text-center">
                   <div className="text-lg font-medium text-gray-800">{currentAngle.toFixed(1)}°</div>
                   <div className="text-sm text-gray-600">Joint Angle</div>
                 </div>
-                
+
                 {/* Pose Detection Status */}
                 <div className="flex items-center justify-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${poseDetected ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -454,17 +454,17 @@ export default function GoodGymExerciseGuidance() {
               <span className="text-gray-600">Status:</span>
               <span className="font-medium">{sessionActive ? (paused ? "Paused" : "Active") : "Inactive"}</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Exercise:</span>
               <span className="font-medium">{availableExercises[selectedExercise]?.name || "None"}</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Frame Rate:</span>
               <span className="font-medium">{frameRate.toFixed(1)} FPS</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Camera:</span>
               <span className="font-medium">{cameraActive ? "Active" : "Inactive"}</span>

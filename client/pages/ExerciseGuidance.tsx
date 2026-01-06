@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -43,7 +43,7 @@ export default function ExerciseGuidance() {
   const [postureState, setPostureState] = useState<"good" | "ok" | "bad">("good");
   const [audioFeedback, setAudioFeedback] = useState(true);
   const [showSkeleton, setShowSkeleton] = useState(true);
-  
+
   // Exercise detection state
   const [selectedExercise, setSelectedExercise] = useState<string>("bicep_curls");
   const [currentAngle, setCurrentAngle] = useState(0);
@@ -52,18 +52,18 @@ export default function ExerciseGuidance() {
   const [cameraFrame, setCameraFrame] = useState<string>("");
   const [frameRate, setFrameRate] = useState(0);
   const [lastRepTime, setLastRepTime] = useState(0);
-  
+
   // Exercise state
   const [availableExercises, setAvailableExercises] = useState<Record<string, Exercise>>({});
   const [connectionStatus, setConnectionStatus] = useState<"disconnected" | "connecting" | "connected" | "error">("disconnected");
-  
+
   // Performance tracking
   const [performanceStats, setPerformanceStats] = useState({
     framesReceived: 0,
     lastFrameTime: 0,
     avgFrameRate: 0
   });
-  
+
   // Refs
   const timerRef = useRef<number | null>(null);
   const frameCountRef = useRef(0);
@@ -71,17 +71,17 @@ export default function ExerciseGuidance() {
   const lastFrameTimeRef = useRef(0);
   const performanceIntervalRef = useRef<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  
+
   // Error message state
   const [errorMessage, setErrorMessage] = useState<string>("");
-  
+
   // Memoized values for performance
   const postureColor = useMemo(() => {
-    return postureState === "good" ? "bg-green-100 border-green-300" : 
-           postureState === "ok" ? "bg-yellow-100 border-yellow-300" : 
-           "bg-red-100 border-red-300";
+    return postureState === "good" ? "bg-green-100 border-green-300" :
+      postureState === "ok" ? "bg-yellow-100 border-yellow-300" :
+        "bg-red-100 border-red-300";
   }, [postureState]);
-  
+
   const postureLabel = useMemo(() => {
     return postureState === "good" ? "Good" : postureState === "ok" ? "Minor" : "Major";
   }, [postureState]);
@@ -93,7 +93,7 @@ export default function ExerciseGuidance() {
     };
     setAvailableExercises(exercises);
   }, []);
-  
+
   // Timer effect for session duration
   useEffect(() => {
     if (sessionActive && !paused) {
@@ -122,17 +122,17 @@ export default function ExerciseGuidance() {
         const currentTime = Date.now();
         const timeDiff = currentTime - lastFrameTimeRef.current;
         const framesDiff = frameCountRef.current - performanceStats.framesReceived;
-        
+
         if (timeDiff > 0) {
           const fps = (framesDiff * 1000) / timeDiff;
           setFrameRate(Math.round(fps * 10) / 10);
-          
+
           setPerformanceStats(prev => ({
             framesReceived: frameCountRef.current,
             lastFrameTime: currentTime,
             avgFrameRate: fps
           }));
-          
+
           lastFrameTimeRef.current = currentTime;
         }
       }, 1000);
@@ -163,84 +163,84 @@ export default function ExerciseGuidance() {
       const ws = new WebSocket(`ws://localhost:8001/ws/exercise/${selectedExercise}`);
       websocketRef.current = ws;
 
-    ws.onopen = () => {
-      setConnectionStatus("connected");
-      console.log("WebSocket connected");
-    };
+      ws.onopen = () => {
+        setConnectionStatus("connected");
+        console.log("WebSocket connected");
+      };
 
-    ws.onmessage = (event) => {
-      try {
-        const data: ExerciseData = JSON.parse(event.data);
-        
-        if (data.type === "frame_data") {
-          frameCountRef.current++;
-          
-          // Batch state updates for better performance
-          setReps(data.reps);
-          setCurrentAngle(data.angle);
-          setExerciseStage(data.stage);
-          setPoseDetected(data.pose_detected);
-          
-          // Update posture state
-          const newPostureState = data.posture_state as "good" | "ok" | "bad";
-          setPostureState(newPostureState);
-          
-          // Update camera frame immediately for ultra-fast rendering
-          if (data.frame) {
-            setCameraFrame(`data:image/jpeg;base64,${data.frame}`);
-          }
-          
-          // Handle completed rep with debouncing
-          if (data.rep_completed) {
-            const currentTime = Date.now();
-            if (currentTime - lastRepTime > 500) { // 500ms debounce
-              setLastRepTime(currentTime);
-              if (audioFeedback) {
-                try {
-                  window.speechSynthesis.cancel();
-                  const utter = new SpeechSynthesisUtterance("Good rep!");
-                  utter.rate = 1.2;
-                  utter.volume = 0.7;
-                  window.speechSynthesis.speak(utter);
-                } catch (error) {
-                  console.error('Audio feedback error:', error);
+      ws.onmessage = (event) => {
+        try {
+          const data: ExerciseData = JSON.parse(event.data);
+
+          if (data.type === "frame_data") {
+            frameCountRef.current++;
+
+            // Batch state updates for better performance
+            setReps(data.reps);
+            setCurrentAngle(data.angle);
+            setExerciseStage(data.stage);
+            setPoseDetected(data.pose_detected);
+
+            // Update posture state
+            const newPostureState = data.posture_state as "good" | "ok" | "bad";
+            setPostureState(newPostureState);
+
+            // Update camera frame immediately for ultra-fast rendering
+            if (data.frame) {
+              setCameraFrame(`data:image/jpeg;base64,${data.frame}`);
+            }
+
+            // Handle completed rep with debouncing
+            if (data.rep_completed) {
+              const currentTime = Date.now();
+              if (currentTime - lastRepTime > 500) { // 500ms debounce
+                setLastRepTime(currentTime);
+                if (audioFeedback) {
+                  try {
+                    window.speechSynthesis.cancel();
+                    const utter = new SpeechSynthesisUtterance("Good rep!");
+                    utter.rate = 1.2;
+                    utter.volume = 0.7;
+                    window.speechSynthesis.speak(utter);
+                  } catch (error) {
+                    console.error('Audio feedback error:', error);
+                  }
                 }
               }
             }
-          }
-          
-          // Posture feedback (throttled to every 30th frame)
-          if (newPostureState === "bad" && frameCountRef.current % 30 === 0 && audioFeedback) {
-            try {
-              window.speechSynthesis.cancel();
-              const utter = new SpeechSynthesisUtterance("Adjust your posture");
-              utter.rate = 1.0;
-              utter.volume = 0.6;
-              window.speechSynthesis.speak(utter);
-            } catch (error) {
-              console.error('Audio feedback error:', error);
+
+            // Posture feedback (throttled to every 30th frame)
+            if (newPostureState === "bad" && frameCountRef.current % 30 === 0 && audioFeedback) {
+              try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance("Adjust your posture");
+                utter.rate = 1.0;
+                utter.volume = 0.6;
+                window.speechSynthesis.speak(utter);
+              } catch (error) {
+                console.error('Audio feedback error:', error);
+              }
             }
+          } else if (data.type === "error") {
+            setErrorMessage(data.message || "Unknown error");
+            setConnectionStatus("error");
           }
-        } else if (data.type === "error") {
-          setErrorMessage(data.message || "Unknown error");
-          setConnectionStatus("error");
+        } catch (error) {
+          console.error("WebSocket message parsing error:", error);
         }
-      } catch (error) {
-        console.error("WebSocket message parsing error:", error);
-      }
-    };
+      };
 
-    ws.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      setConnectionStatus("error");
-      setErrorMessage("Connection error");
-    };
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        setConnectionStatus("error");
+        setErrorMessage("Connection error");
+      };
 
-    ws.onclose = () => {
-      setConnectionStatus("disconnected");
-      console.log("WebSocket disconnected");
-    };
-    
+      ws.onclose = () => {
+        setConnectionStatus("disconnected");
+        console.log("WebSocket disconnected");
+      };
+
     } catch (wsError) {
       console.warn("Failed to create WebSocket connection:", wsError);
       setConnectionStatus("error");
@@ -266,7 +266,7 @@ export default function ExerciseGuidance() {
     setPostureState("good");
     setErrorMessage("");
     setConnectionStatus("connected");
-    
+
     // Reset performance counters
     frameCountRef.current = 0;
     lastFrameTimeRef.current = Date.now();
@@ -276,7 +276,7 @@ export default function ExerciseGuidance() {
       lastFrameTime: Date.now(),
       avgFrameRate: 30
     });
-    
+
     setLastRepTime(Date.now());
   };
 
@@ -295,22 +295,22 @@ export default function ExerciseGuidance() {
     setSets((s) => s + 1);
     disconnectWebSocket();
     setPoseDetected(false);
-    
+
     // Stop camera
     if (videoRef.current && videoRef.current.srcObject) {
       const stream = videoRef.current.srcObject as MediaStream;
       stream.getTracks().forEach(track => track.stop());
       videoRef.current.srcObject = null;
     }
-    
+
     // Save summary to localStorage
     const history = JSON.parse(localStorage.getItem("exercise_history") || "[]");
-    history.unshift({ 
-      id: Date.now(), 
+    history.unshift({
+      id: Date.now(),
       exercise: selectedExercise,
-      reps, 
-      sets: sets + 1, 
-      duration, 
+      reps,
+      sets: sets + 1,
+      duration,
       postureScore: Math.round(Math.random() * 20 + 80),
       date: new Date().toISOString()
     });
@@ -330,9 +330,9 @@ export default function ExerciseGuidance() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
 
-      <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}>
+
+      <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}>
         <header className="mb-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold dashboard-title">🤖 MediaPipe AI Trainer</h1>
@@ -350,9 +350,9 @@ export default function ExerciseGuidance() {
               <div className="text-xs text-gray-500">{sessionActive ? (paused ? "Paused" : "Active") : "Not started"}</div>
             </div>
             <Badge variant={connectionStatus === "connected" ? "default" : connectionStatus === "connecting" ? "secondary" : "destructive"}>
-              {connectionStatus === "connected" ? "🟢 Connected" : 
-               connectionStatus === "connecting" ? "🟡 Connecting" : 
-               connectionStatus === "error" ? "🔴 Error" : "⚪ Disconnected"}
+              {connectionStatus === "connected" ? "🟢 Connected" :
+                connectionStatus === "connecting" ? "🟡 Connecting" :
+                  connectionStatus === "error" ? "🔴 Error" : "⚪ Disconnected"}
             </Badge>
             {frameRate > 0 && (
               <Badge variant="outline" className="bg-green-50 text-green-700">
@@ -421,7 +421,7 @@ export default function ExerciseGuidance() {
                 onRepDetected={() => {
                   setReps(prev => prev + 1);
                   setExerciseStage("completed");
-                  
+
                   // Audio feedback
                   if (audioFeedback) {
                     try {
@@ -434,7 +434,7 @@ export default function ExerciseGuidance() {
                       console.error('Audio feedback error:', error);
                     }
                   }
-                  
+
                   // Reset stage after a moment
                   setTimeout(() => {
                     setExerciseStage("detecting");
@@ -448,7 +448,7 @@ export default function ExerciseGuidance() {
                 }}
                 className="w-full h-full"
               />
-              
+
               {/* Exercise info overlay */}
               {sessionActive && (
                 <div className="absolute bottom-4 left-4 right-4" style={{ zIndex: 20 }}>
@@ -481,12 +481,12 @@ export default function ExerciseGuidance() {
                   <input type="checkbox" checked={audioFeedback} onChange={() => setAudioFeedback((s) => !s)} />
                   🔊 Audio
                 </label>
-                <Button 
+                <Button
                   onClick={() => {
                     setReps(0);
                     setLastRepTime(Date.now());
-                  }} 
-                  className="px-3 py-1 bg-blue-600 text-white text-xs" 
+                  }}
+                  className="px-3 py-1 bg-blue-600 text-white text-xs"
                   title="Reset rep count to 0"
                 >
                   🔄 Reset
@@ -540,7 +540,7 @@ export default function ExerciseGuidance() {
                 {availableExercises[selectedExercise]?.name || "Select Exercise"}
               </Badge>
             </div>
-            
+
             <div className="mb-3">
               <div className="font-semibold">{availableExercises[selectedExercise]?.name || "No Exercise Selected"}</div>
               <div className="text-sm text-gray-500">
@@ -552,11 +552,11 @@ export default function ExerciseGuidance() {
             <div className="rounded-md overflow-hidden bg-gray-50 mb-4">
               {selectedExercise === "bicep_curls" ? (
                 <div className="sketchfab-embed-wrapper h-64">
-                  <iframe 
-                    title="09. Alternating Bicep Curl" 
-                    frameBorder="0" 
-                    allowFullScreen 
-                    allow="autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share" 
+                  <iframe
+                    title="09. Alternating Bicep Curl"
+                    frameBorder="0"
+                    allowFullScreen
+                    allow="autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share"
                     src="https://sketchfab.com/models/18f9cc1e40c3423f92058f3b7e1d6c1b/embed"
                     className="w-full h-full"
                   />
@@ -565,11 +565,11 @@ export default function ExerciseGuidance() {
                 <div className="h-40 flex items-center justify-center">
                   <div className="text-center text-gray-600">
                     <div className="text-4xl mb-2">
-                      {selectedExercise === "squats" ? "🏋️" : 
-                       selectedExercise === "pushups" ? "💪" :
-                       selectedExercise === "jumping_jacks" ? "🤸" :
-                       selectedExercise === "lunges" ? "🦵" :
-                       selectedExercise === "shoulder_press" ? "🏋️‍♂️" : "🏃"}
+                      {selectedExercise === "squats" ? "🏋️" :
+                        selectedExercise === "pushups" ? "💪" :
+                          selectedExercise === "jumping_jacks" ? "🤸" :
+                            selectedExercise === "lunges" ? "🦵" :
+                              selectedExercise === "shoulder_press" ? "🏋️‍♂️" : "🏃"}
                     </div>
                     <div className="text-sm">
                       {selectedExercise ? `${availableExercises[selectedExercise]?.name} Exercise` : "Select an exercise"}
@@ -577,29 +577,29 @@ export default function ExerciseGuidance() {
                   </div>
                 </div>
               )}
-              
+
               {selectedExercise === "bicep_curls" && (
                 <p className="text-xs text-gray-500 p-3 bg-white">
-                  <a 
-                    href="https://sketchfab.com/3d-models/09-alternating-bicep-curl-18f9cc1e40c3423f92058f3b7e1d6c1b?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b" 
-                    target="_blank" 
-                    rel="nofollow" 
+                  <a
+                    href="https://sketchfab.com/3d-models/09-alternating-bicep-curl-18f9cc1e40c3423f92058f3b7e1d6c1b?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b"
+                    target="_blank"
+                    rel="nofollow"
                     className="font-bold text-blue-600 hover:text-blue-800"
-                  > 
-                    09. Alternating Bicep Curl 
+                  >
+                    09. Alternating Bicep Curl
                   </a> by{' '}
-                  <a 
-                    href="https://sketchfab.com/3DMuscleModel?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b" 
-                    target="_blank" 
-                    rel="nofollow" 
+                  <a
+                    href="https://sketchfab.com/3DMuscleModel?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b"
+                    target="_blank"
+                    rel="nofollow"
                     className="font-bold text-blue-600 hover:text-blue-800"
-                  > 
-                    3DMuscleModel 
+                  >
+                    3DMuscleModel
                   </a> on{' '}
-                  <a 
-                    href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b" 
-                    target="_blank" 
-                    rel="nofollow" 
+                  <a
+                    href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=18f9cc1e40c3423f92058f3b7e1d6c1b"
+                    target="_blank"
+                    rel="nofollow"
                     className="font-bold text-blue-600 hover:text-blue-800"
                   >
                     Sketchfab
@@ -649,14 +649,14 @@ export default function ExerciseGuidance() {
 
 
             <div className="flex gap-2 mb-4">
-              <Button 
-                onClick={startExerciseSession} 
+              <Button
+                onClick={startExerciseSession}
                 disabled={!selectedExercise || sessionActive}
                 className="bg-green-600 hover:bg-green-700"
               >
                 Start Exercise
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 onClick={() => window.open(`https://www.google.com/search?q=${selectedExercise}+exercise+form`, '_blank')}
                 disabled={!selectedExercise}

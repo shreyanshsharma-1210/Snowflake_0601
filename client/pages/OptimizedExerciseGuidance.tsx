@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -21,7 +21,7 @@ export default function OptimizedExerciseGuidance() {
   const [duration, setDuration] = useState(0);
   const [postureState, setPostureState] = useState<"good" | "ok" | "bad">("good");
   const [audioFeedback, setAudioFeedback] = useState(true);
-  
+
   // Exercise detection state
   const [selectedExercise, setSelectedExercise] = useState<string>("squats");
   const [currentAngle, setCurrentAngle] = useState(0);
@@ -29,7 +29,7 @@ export default function OptimizedExerciseGuidance() {
   const [poseDetected, setPoseDetected] = useState(false);
   const [cameraFrame, setCameraFrame] = useState<string>("");
   const [lastRepTime, setLastRepTime] = useState(0);
-  
+
   // Good-GYM WebSocket integration
   const {
     connectionStatus,
@@ -43,27 +43,27 @@ export default function OptimizedExerciseGuidance() {
     resetCounter,
     isConnected
   } = useExerciseWebSocket({ autoConnect: false });
-  
+
   // Performance tracking
   const [performanceStats, setPerformanceStats] = useState({
     framesReceived: 0,
     lastFrameTime: 0,
     avgFrameRate: 0
   });
-  
+
   // Refs
   const timerRef = useRef<number | null>(null);
-  
+
   // Error message state
   const [errorMessage, setErrorMessage] = useState<string>("");
-  
+
   // Memoized values for performance
   const postureColor = useMemo(() => {
-    return postureState === "good" ? "bg-green-100 border-green-300" : 
-           postureState === "ok" ? "bg-yellow-100 border-yellow-300" : 
-           "bg-red-100 border-red-300";
+    return postureState === "good" ? "bg-green-100 border-green-300" :
+      postureState === "ok" ? "bg-yellow-100 border-yellow-300" :
+        "bg-red-100 border-red-300";
   }, [postureState]);
-  
+
   const postureLabel = useMemo(() => {
     return postureState === "good" ? "Good" : postureState === "ok" ? "Minor" : "Major";
   }, [postureState]);
@@ -76,7 +76,7 @@ export default function OptimizedExerciseGuidance() {
       setErrorMessage("");
     }
   }, [wsError]);
-  
+
   // Update exercise data from WebSocket
   useEffect(() => {
     if (exerciseData) {
@@ -84,11 +84,11 @@ export default function OptimizedExerciseGuidance() {
       setExerciseStage(exerciseData.stage);
       setCurrentAngle(exerciseData.angle);
       setPoseDetected(exerciseData.pose_detected);
-      
+
       if (exerciseData.frame) {
         setCameraFrame(exerciseData.frame);
       }
-      
+
       // Update performance stats
       const now = Date.now();
       setPerformanceStats(prev => ({
@@ -96,11 +96,11 @@ export default function OptimizedExerciseGuidance() {
         lastFrameTime: now,
         avgFrameRate: prev.framesReceived > 0 ? 1000 / (now - prev.lastFrameTime) : 0
       }));
-      
+
       // Check for rep completion with audio feedback
       if (exerciseData.reps > reps) {
         setLastRepTime(now);
-        
+
         if (audioFeedback) {
           try {
             // Use Web Speech API for instant feedback
@@ -114,7 +114,7 @@ export default function OptimizedExerciseGuidance() {
           }
         }
       }
-      
+
       // Update posture state based on pose quality
       const newPostureState = exerciseData.pose_detected ? "good" : "bad";
       if (newPostureState !== postureState) {
@@ -129,7 +129,7 @@ export default function OptimizedExerciseGuidance() {
       processFrame(frameData, selectedExercise);
     }
   }, [sessionActive, paused, isConnected, processFrame, selectedExercise]);
-  
+
   // Timer effect for session duration
   useEffect(() => {
     if (sessionActive && !paused) {
@@ -150,7 +150,7 @@ export default function OptimizedExerciseGuidance() {
       }
     };
   }, [sessionActive, paused]);
-  
+
   // Start/stop WebSocket connection based on session state
   useEffect(() => {
     if (sessionActive && connectionStatus === 'disconnected') {
@@ -170,17 +170,17 @@ export default function OptimizedExerciseGuidance() {
       setDuration(0);
       setPostureState("good");
       setErrorMessage("");
-      
+
       // Connect to WebSocket
       if (!isConnected) {
         connect();
       }
-      
+
       // Start the exercise session on the backend
       setTimeout(() => {
         startWSSession(selectedExercise);
       }, 1000); // Wait for connection
-      
+
     } catch (error) {
       setErrorMessage("Failed to start session. Check if the Good-GYM API server is running.");
       console.error("Start session error:", error);
@@ -190,12 +190,12 @@ export default function OptimizedExerciseGuidance() {
   const stopSession = useCallback(() => {
     setSessionActive(false);
     setPaused(false);
-    
+
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-    
+
     // Disconnect WebSocket
     disconnect();
   }, [disconnect]);
@@ -208,7 +208,7 @@ export default function OptimizedExerciseGuidance() {
     setExerciseStage("detecting");
     setCurrentAngle(0);
     setPoseDetected(false);
-    
+
     // Reset counter on backend
     if (isConnected) {
       resetCounter();
@@ -218,7 +218,7 @@ export default function OptimizedExerciseGuidance() {
   const pauseSession = useCallback(() => {
     setPaused(!paused);
   }, [paused]);
-  
+
   // Get connection status color for UI
   const getConnectionStatusColor = useMemo(() => {
     switch (connectionStatus) {
@@ -228,7 +228,7 @@ export default function OptimizedExerciseGuidance() {
       default: return 'bg-gray-500';
     }
   }, [connectionStatus]);
-  
+
   // Get connection status text
   const getConnectionStatusText = useMemo(() => {
     switch (connectionStatus) {
@@ -249,10 +249,10 @@ export default function OptimizedExerciseGuidance() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
       >
         <header className="mb-6">
@@ -264,7 +264,7 @@ export default function OptimizedExerciseGuidance() {
 
         {/* Main Exercise Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-          
+
           {/* Video Feed - Large Section */}
           <div className="lg:col-span-2">
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
@@ -275,7 +275,7 @@ export default function OptimizedExerciseGuidance() {
                   <span className="text-sm font-medium">{getConnectionStatusText}</span>
                 </div>
               </div>
-              
+
               <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
                 <OptimizedExerciseCamera
                   isActive={sessionActive && !paused}
@@ -285,18 +285,18 @@ export default function OptimizedExerciseGuidance() {
                   height={480}
                   frameRate={10}
                 />
-                
+
                 {/* Processed frame overlay */}
                 {cameraFrame && (
                   <div className="absolute inset-0 pointer-events-none">
-                    <img 
-                      src={cameraFrame} 
-                      alt="Processed frame" 
+                    <img
+                      src={cameraFrame}
+                      alt="Processed frame"
                       className="w-full h-full object-cover rounded-lg opacity-90"
                     />
                   </div>
                 )}
-                
+
                 {/* Exercise info overlay */}
                 {sessionActive && (
                   <div className="absolute bottom-4 left-4 right-4">
@@ -320,7 +320,7 @@ export default function OptimizedExerciseGuidance() {
 
           {/* Exercise Controls & Stats */}
           <div className="space-y-6">
-            
+
             {/* Session Control */}
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
               <div className="flex items-center justify-between mb-4">
@@ -377,7 +377,7 @@ export default function OptimizedExerciseGuidance() {
                     </Button>
                   </div>
                 )}
-                
+
                 <Button
                   onClick={resetSession}
                   variant="outline"
@@ -405,26 +405,26 @@ export default function OptimizedExerciseGuidance() {
             {/* Exercise Stats */}
             <div className="bg-white/20 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30">
               <h3 className="text-lg font-semibold text-gray-800 mb-4">📊 Session Stats</h3>
-              
+
               <div className="space-y-4">
                 {/* Reps Counter */}
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600">{reps}</div>
                   <div className="text-sm text-gray-600">Repetitions</div>
                 </div>
-                
+
                 {/* Duration */}
                 <div className="text-center">
                   <div className="text-xl font-semibold text-gray-800">{formatDuration(duration)}</div>
                   <div className="text-sm text-gray-600">Duration</div>
                 </div>
-                
+
                 {/* Current Angle */}
                 <div className="text-center">
                   <div className="text-lg font-medium text-gray-800">{currentAngle.toFixed(1)}°</div>
                   <div className="text-sm text-gray-600">Joint Angle</div>
                 </div>
-                
+
                 {/* Pose Detection Status */}
                 <div className="flex items-center justify-center gap-2">
                   <div className={`w-2 h-2 rounded-full ${poseDetected ? 'bg-green-500' : 'bg-red-500'}`}></div>
@@ -458,10 +458,10 @@ export default function OptimizedExerciseGuidance() {
             <AlertDescription className="text-red-700">
               {errorMessage}
               {connectionStatus === 'error' && (
-                <Button 
-                  onClick={connect} 
-                  size="sm" 
-                  variant="outline" 
+                <Button
+                  onClick={connect}
+                  size="sm"
+                  variant="outline"
                   className="ml-2"
                 >
                   Retry Connection
@@ -481,17 +481,17 @@ export default function OptimizedExerciseGuidance() {
                 <span className="font-medium">{getConnectionStatusText}</span>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Exercises:</span>
               <span className="font-medium">{Object.keys(availableExercises).length}</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Frame Rate:</span>
               <span className="font-medium">{performanceStats.avgFrameRate.toFixed(1)} FPS</span>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <span className="text-gray-600">Frames:</span>
               <span className="font-medium">{performanceStats.framesReceived}</span>

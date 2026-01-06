@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "../components/FloatingSidebar";
-import { FloatingTopBar } from "../components/FloatingTopBar";
+
 import { useSidebar } from "../contexts/SidebarContext";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
@@ -475,10 +475,10 @@ export default function ClinicalProfile() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
 
-      <motion.div 
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+
+      <motion.div
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -508,7 +508,7 @@ export default function ClinicalProfile() {
                   {profile.demographics.age} years • {profile.demographics.gender} • {profile.demographics.bloodGroup} • BMI: {profile.demographics.bmi}
                 </p>
                 <p className="text-slate-200">
-                  DOB: {new Date(profile.demographics.dateOfBirth).toLocaleDateString()} • 
+                  DOB: {new Date(profile.demographics.dateOfBirth).toLocaleDateString()} •
                   Emergency: {profile.demographics.emergencyContact.name} ({profile.demographics.emergencyContact.phone})
                 </p>
               </div>
@@ -536,7 +536,7 @@ export default function ClinicalProfile() {
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
+
           {/* Chief Complaints & Present Illness */}
           <Card>
             <CardHeader>
@@ -647,7 +647,7 @@ export default function ClinicalProfile() {
                   <TabsTrigger value="respiratory">Respiratory</TabsTrigger>
                   <TabsTrigger value="psychiatry">Psychiatry</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="cardiology" className="space-y-3">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -769,7 +769,7 @@ export default function ClinicalProfile() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                
+
                 {/* CBC */}
                 <div>
                   <h4 className="font-semibold text-sm mb-2">Complete Blood Count</h4>

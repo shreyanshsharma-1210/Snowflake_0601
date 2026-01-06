@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
 import { useSidebar } from "@/contexts/SidebarContext";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import {
   BarChart,
   Bar,
@@ -114,11 +114,11 @@ export default function Analytics() {
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       {/* Main Content */}
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
       >
         {/* Header */}
@@ -143,11 +143,10 @@ export default function Analytics() {
                   <button
                     key={period}
                     onClick={() => setSelectedPeriod(period)}
-                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${
-                      selectedPeriod === period
+                    className={`px-3 py-2 rounded-xl text-sm font-medium transition-all ${selectedPeriod === period
                         ? "bg-purple-500 text-white shadow-sm"
                         : "text-gray-600 hover:text-gray-900"
-                    }`}
+                      }`}
                   >
                     {period}
                   </button>
@@ -222,11 +221,10 @@ export default function Analytics() {
                   )}
                 </div>
                 <span
-                  className={`text-sm font-medium px-2 py-1 rounded-full ${
-                    metric.trending === "up"
+                  className={`text-sm font-medium px-2 py-1 rounded-full ${metric.trending === "up"
                       ? "text-green-600 bg-green-50"
                       : "text-red-600 bg-red-50"
-                  }`}
+                    }`}
                 >
                   {metric.change}
                 </span>
@@ -334,11 +332,10 @@ export default function Analytics() {
                         ${(category.sales / 1000).toFixed(0)}K
                       </span>
                       <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          category.growth > 0
+                        className={`text-xs px-2 py-1 rounded-full ${category.growth > 0
                             ? "text-green-600 bg-green-50"
                             : "text-red-600 bg-red-50"
-                        }`}
+                          }`}
                       >
                         {category.growth > 0 ? "+" : ""}
                         {category.growth}%

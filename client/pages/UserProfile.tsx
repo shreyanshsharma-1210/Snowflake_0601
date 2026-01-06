@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ interface UserProfile {
     relation: string;
     phone: string;
   };
-  
+
   // Medical History
   chronicConditions: string[];
   cancer: {
@@ -39,7 +39,7 @@ interface UserProfile {
   cardiovascularIssues: string[];
   infectiousDiseases: string[];
   surgeries: string[];
-  
+
   // Allergies & Vaccinations
   allergies: {
     drug: string[];
@@ -51,7 +51,7 @@ interface UserProfile {
     date: string;
     doses: number;
   }>;
-  
+
   // Medications & Therapies
   medications: Array<{
     name: string;
@@ -59,14 +59,14 @@ interface UserProfile {
     frequency: string;
   }>;
   ongoingTreatments: string[];
-  
+
   // Lifestyle
   smoking: string;
   alcohol: string;
   exerciseFrequency: string;
   dietPreference: string;
   sleepPattern: string;
-  
+
   // Family History
   familyHistory: {
     hypertension: boolean;
@@ -74,24 +74,24 @@ interface UserProfile {
     cancer: boolean;
     geneticDisorders: string[];
   };
-  
+
   // Diagnostics
   lastBloodTest: string;
   cholesterolLevel: string;
   imagingResults: string[];
-  
+
   // Donation Preferences
   bloodDonation: {
     willing: boolean;
     lastDate: string;
   };
   organDonor: boolean;
-  
+
   // Emergency Directives
   dnrPreference: boolean;
   preferredHospital: string;
   preferredDoctor: string;
-  
+
   // Digital Health
   qrCode: string;
   wearableData: {
@@ -221,11 +221,11 @@ export default function UserProfile() {
 
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
-      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => {}} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => { }} />
 
-      <motion.div 
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+
+      <motion.div
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -280,7 +280,7 @@ export default function UserProfile() {
 
               {/* Profile Sections Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                
+
                 {/* Emergency Contact */}
                 <Card>
                   <CardHeader>
@@ -389,7 +389,7 @@ export default function UserProfile() {
                   <CardDescription>Update your health profile details</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  
+
                   {/* Personal Information */}
                   <div>
                     <h3 className="text-lg font-semibold mb-4 text-blue-700">👤 Personal Information</h3>
@@ -399,7 +399,7 @@ export default function UserProfile() {
                         <Input
                           id="fullName"
                           value={profile.fullName}
-                          onChange={(e) => setProfile({...profile, fullName: e.target.value})}
+                          onChange={(e) => setProfile({ ...profile, fullName: e.target.value })}
                         />
                       </div>
                       <div>
@@ -408,7 +408,7 @@ export default function UserProfile() {
                           id="dateOfBirth"
                           type="date"
                           value={profile.dateOfBirth}
-                          onChange={(e) => setProfile({...profile, dateOfBirth: e.target.value})}
+                          onChange={(e) => setProfile({ ...profile, dateOfBirth: e.target.value })}
                         />
                       </div>
                       <div>
@@ -422,7 +422,7 @@ export default function UserProfile() {
                       </div>
                       <div>
                         <Label htmlFor="gender">Gender</Label>
-                        <Select value={profile.gender} onValueChange={(value) => setProfile({...profile, gender: value})}>
+                        <Select value={profile.gender} onValueChange={(value) => setProfile({ ...profile, gender: value })}>
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -438,7 +438,7 @@ export default function UserProfile() {
                         <Input
                           id="height"
                           value={profile.height}
-                          onChange={(e) => setProfile({...profile, height: e.target.value})}
+                          onChange={(e) => setProfile({ ...profile, height: e.target.value })}
                         />
                       </div>
                       <div>
@@ -446,7 +446,7 @@ export default function UserProfile() {
                         <Input
                           id="weight"
                           value={profile.weight}
-                          onChange={(e) => setProfile({...profile, weight: e.target.value})}
+                          onChange={(e) => setProfile({ ...profile, weight: e.target.value })}
                         />
                       </div>
                       <div>
@@ -460,7 +460,7 @@ export default function UserProfile() {
                       </div>
                       <div>
                         <Label htmlFor="bloodGroup">Blood Group</Label>
-                        <Select value={profile.bloodGroup} onValueChange={(value) => setProfile({...profile, bloodGroup: value})}>
+                        <Select value={profile.bloodGroup} onValueChange={(value) => setProfile({ ...profile, bloodGroup: value })}>
                           <SelectTrigger>
                             <SelectValue />
                           </SelectTrigger>
@@ -489,8 +489,8 @@ export default function UserProfile() {
                           id="emergencyName"
                           value={profile.emergencyContact.name}
                           onChange={(e) => setProfile({
-                            ...profile, 
-                            emergencyContact: {...profile.emergencyContact, name: e.target.value}
+                            ...profile,
+                            emergencyContact: { ...profile.emergencyContact, name: e.target.value }
                           })}
                         />
                       </div>
@@ -500,8 +500,8 @@ export default function UserProfile() {
                           id="emergencyRelation"
                           value={profile.emergencyContact.relation}
                           onChange={(e) => setProfile({
-                            ...profile, 
-                            emergencyContact: {...profile.emergencyContact, relation: e.target.value}
+                            ...profile,
+                            emergencyContact: { ...profile.emergencyContact, relation: e.target.value }
                           })}
                         />
                       </div>
@@ -511,8 +511,8 @@ export default function UserProfile() {
                           id="emergencyPhone"
                           value={profile.emergencyContact.phone}
                           onChange={(e) => setProfile({
-                            ...profile, 
-                            emergencyContact: {...profile.emergencyContact, phone: e.target.value}
+                            ...profile,
+                            emergencyContact: { ...profile.emergencyContact, phone: e.target.value }
                           })}
                         />
                       </div>

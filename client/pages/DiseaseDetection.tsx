@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "../components/FloatingSidebar";
-import { FloatingTopBar } from "../components/FloatingTopBar";
+
 import { useSidebar } from "../contexts/SidebarContext";
 import { Button } from "../components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ export default function DiseaseDetection() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [afterWidth, setAfterWidth] = useState(50);
   const [iframeUrl, setIframeUrl] = useState<string>("show-doctor-finder"); // Always show by default
-  const [userLocation, setUserLocation] = useState<{lat: number, lng: number, city: string} | null>(null);
+  const [userLocation, setUserLocation] = useState<{ lat: number, lng: number, city: string } | null>(null);
   const [locationLoading, setLocationLoading] = useState(false);
   const [doctorData, setDoctorData] = useState<any[]>([]);
   const [selectedDoctorType, setSelectedDoctorType] = useState<string>("All");
@@ -79,13 +79,13 @@ export default function DiseaseDetection() {
       });
 
       const { latitude, longitude } = position.coords;
-      
+
       // Reverse geocoding to get city name
       try {
         const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`);
         const data = await response.json();
         const city = data.city || data.locality || data.principalSubdivision || "Your Location";
-        
+
         setUserLocation({
           lat: latitude,
           lng: longitude,
@@ -110,7 +110,7 @@ export default function DiseaseDetection() {
   // Enhanced ML prediction function with seamless fallback
   const analyzeWithMediScan = async () => {
     if (images.length === 0) return;
-    
+
     setAnalyzing(true);
     setProgress(0);
     setResult(null);
@@ -118,7 +118,7 @@ export default function DiseaseDetection() {
     // Map MediScan model names to MedViT backend names
     const modelMapping = {
       "MediScan-Small": "MedViT-Small",
-      "MediScan-Base": "MedViT-Base", 
+      "MediScan-Base": "MedViT-Base",
       "MediScan-Large": "MedViT-Large"
     };
 
@@ -156,7 +156,7 @@ export default function DiseaseDetection() {
       }
 
       const data = await response.json();
-      
+
       if (data.success) {
         setResult({
           disease: data.top_prediction,
@@ -174,14 +174,14 @@ export default function DiseaseDetection() {
       }
     } catch (error) {
       clearInterval(progressInterval);
-      
+
       // Enhanced fallback analysis - appears as real analysis
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate processing time
-      
+
       const generateRealisticResult = () => {
         const confidence = Math.floor(72 + Math.random() * 23); // 72-95% confidence
         const severity = confidence > 88 ? "severe" : confidence > 78 ? "moderate" : "mild";
-        
+
         // Generate realistic disease names based on dataset
         const diseaseMap: { [key: string]: string[] } = {
           "ChestMNIST": ["Normal Chest X-ray", "Pneumonia", "Atelectasis", "Cardiomegaly", "Effusion"],
@@ -190,10 +190,10 @@ export default function DiseaseDetection() {
           "RetinaMNIST": ["Normal Retina", "Diabetic Retinopathy", "Glaucoma", "Cataract", "AMD"],
           "DermaMNIST": ["Melanocytic Nevi", "Melanoma", "Benign Keratosis", "Basal Cell Carcinoma", "Actinic Keratoses"]
         };
-        
+
         const possibleDiseases = diseaseMap[dataset] || ["Normal", "Abnormal Finding"];
         const selectedDisease = possibleDiseases[Math.floor(Math.random() * possibleDiseases.length)];
-        
+
         const descriptions: { [key: string]: string } = {
           "Normal": "The analysis indicates normal findings with no significant abnormalities detected.",
           "Pneumonia": "Possible signs of pneumonia detected. Inflammation in lung tissue may be present.",
@@ -201,7 +201,7 @@ export default function DiseaseDetection() {
           "Diabetic Retinopathy": "Signs consistent with diabetic retinopathy. Ophthalmological follow-up advised.",
           "Normal Chest X-ray": "Chest imaging appears within normal limits with clear lung fields."
         };
-        
+
         return {
           disease: selectedDisease,
           confidence,
@@ -290,34 +290,34 @@ export default function DiseaseDetection() {
   const generateDoctorData = (specialty: string, city: string) => {
     const specialtyNames: { [key: string]: string[] } = {
       "Dermatologist": [
-        "Advanced Skin Care Center", "Dermatology Associates", "Clear Skin Clinic", 
+        "Advanced Skin Care Center", "Dermatology Associates", "Clear Skin Clinic",
         "Premier Dermatology", "Skin Health Institute", "Radiant Dermatology"
       ],
       "Ophthalmologist": [
-        "Vision Care Center", "Eye Specialty Clinic", "Clear Vision Institute", 
+        "Vision Care Center", "Eye Specialty Clinic", "Clear Vision Institute",
         "Premier Eye Care", "Advanced Eye Hospital", "Bright Eyes Clinic"
       ],
       "Pulmonologist": [
-        "Lung & Chest Clinic", "Respiratory Care Center", "Breath Easy Hospital", 
+        "Lung & Chest Clinic", "Respiratory Care Center", "Breath Easy Hospital",
         "Pulmonary Medicine Institute", "Advanced Lung Care", "Chest Health Center"
       ],
       "Oncologist": [
-        "Cancer Care Institute", "Oncology Treatment Center", "Hope Cancer Hospital", 
+        "Cancer Care Institute", "Oncology Treatment Center", "Hope Cancer Hospital",
         "Comprehensive Cancer Care", "Advanced Oncology Clinic", "Cancer Specialists"
       ],
       "Pathologist": [
-        "Diagnostic Lab Center", "Pathology Associates", "Medical Diagnostics", 
+        "Diagnostic Lab Center", "Pathology Associates", "Medical Diagnostics",
         "Advanced Lab Services", "Precision Pathology", "Clinical Diagnostics"
       ],
       "General Practitioner": [
-        "Family Health Center", "Primary Care Clinic", "Community Health", 
+        "Family Health Center", "Primary Care Clinic", "Community Health",
         "General Medicine Associates", "Family Care Hospital", "Wellness Center"
       ]
     };
 
     const areas = ["Medical District", "Healthcare Plaza", "Central Avenue", "Main Street", "Hospital Road", "Clinic Square"];
     const names = specialtyNames[specialty] || specialtyNames["General Practitioner"];
-    
+
     return names.slice(0, 3).map((name, index) => ({
       id: `${specialty}-${index + 1}`,
       name: name,
@@ -396,10 +396,10 @@ export default function DiseaseDetection() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+
 
       <motion.div
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         animate={{ marginLeft: isCollapsed ? 80 : 272 }}
       >
         <header className="mb-6">
@@ -409,7 +409,7 @@ export default function DiseaseDetection() {
 
         {/* Bento Grid Layout */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-6 auto-rows-auto">
-          
+
           {/* Upload & Configuration - Large Glass Box */}
           <section className="md:col-span-2 lg:col-span-3 xl:col-span-4 row-span-2 bg-white/20 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 hover:bg-white/25 transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
             <div className="flex items-start justify-between mb-4">
@@ -423,9 +423,9 @@ export default function DiseaseDetection() {
             <div className="mb-4 space-y-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">🏥 Medical Specialty</label>
-                <select 
-                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
-                  value={medicalCategory} 
+                <select
+                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  value={medicalCategory}
                   onChange={(e) => setMedicalCategory(e.target.value)}
                 >
                   {Object.keys(medicalCategories).map((category) => (
@@ -436,9 +436,9 @@ export default function DiseaseDetection() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">📊 Dataset</label>
-                <select 
-                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
-                  value={dataset} 
+                <select
+                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  value={dataset}
                   onChange={(e) => setDataset(e.target.value)}
                 >
                   {medicalCategories[medicalCategory as keyof typeof medicalCategories]?.map((ds) => (
@@ -449,9 +449,9 @@ export default function DiseaseDetection() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">🤖 Model Type</label>
-                <select 
-                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent" 
-                  value={modelType} 
+                <select
+                  className="w-full p-2 rounded-md border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  value={modelType}
                   onChange={(e) => setModelType(e.target.value)}
                 >
                   {modelTypes.map((model) => (
@@ -499,9 +499,9 @@ export default function DiseaseDetection() {
             )}
 
             <div className="mt-4">
-              <Button 
-                onClick={startAnalyze} 
-                className="w-full py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg font-semibold transform transition hover:scale-105 shadow-lg hover:shadow-xl" 
+              <Button
+                onClick={startAnalyze}
+                className="w-full py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-lg font-semibold transform transition hover:scale-105 shadow-lg hover:shadow-xl"
                 disabled={images.length === 0 || analyzing}
               >
                 {analyzing ? (
@@ -518,34 +518,34 @@ export default function DiseaseDetection() {
 
           {/* Analysis Results - Glass Box */}
           <section className="md:col-span-1 lg:col-span-2 xl:col-span-2 row-span-1 bg-white/15 backdrop-blur-xl rounded-3xl p-6 shadow-2xl border border-white/30 hover:bg-white/20 transition-all duration-300 hover:scale-[1.02] flex flex-col justify-center min-h-[280px]">
-              {!analyzing && !result && (
-                <div className="text-center text-gray-600">Ready to analyze with MediScan AI.</div>
-              )}
-              {analyzing && (
-                <div className="text-center">
-                  <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center bg-white/30 mb-3 relative animate-pulse">
-                    <svg width="60" height="60" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
-                          <stop offset="0%" stopColor="#8b5cf6" />
-                          <stop offset="100%" stopColor="#06b6d4" />
-                        </linearGradient>
-                      </defs>
-                      <circle cx="44" cy="44" r="30" stroke="url(#g2)" strokeWidth="6" strokeOpacity="0.6" />
-                    </svg>
-                  </div>
-                  <div className="text-sm font-medium mb-2">
-                    {progress < 30 ? "🔬 Preprocessing image..." : 
-                     progress < 60 ? "🧠 Running neural network..." : 
-                     progress < 85 ? "📊 Analyzing patterns..." : 
-                     "✨ Finalizing results..."}
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-purple-500 to-teal-400 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
-                  </div>
-                  <div className="text-xs text-gray-500 mt-2">{progress}% • {modelType}</div>
+            {!analyzing && !result && (
+              <div className="text-center text-gray-600">Ready to analyze with MediScan AI.</div>
+            )}
+            {analyzing && (
+              <div className="text-center">
+                <div className="mx-auto w-20 h-20 rounded-full flex items-center justify-center bg-white/30 mb-3 relative animate-pulse">
+                  <svg width="60" height="60" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="g2" x1="0" x2="1" y1="0" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" />
+                        <stop offset="100%" stopColor="#06b6d4" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="44" cy="44" r="30" stroke="url(#g2)" strokeWidth="6" strokeOpacity="0.6" />
+                  </svg>
                 </div>
-              )}
+                <div className="text-sm font-medium mb-2">
+                  {progress < 30 ? "🔬 Preprocessing image..." :
+                    progress < 60 ? "🧠 Running neural network..." :
+                      progress < 85 ? "📊 Analyzing patterns..." :
+                        "✨ Finalizing results..."}
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-purple-500 to-teal-400 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
+                </div>
+                <div className="text-xs text-gray-500 mt-2">{progress}% • {modelType}</div>
+              </div>
+            )}
 
             {!analyzing && result && (
               <div>
@@ -555,25 +555,24 @@ export default function DiseaseDetection() {
                   <div className="font-semibold">{result.confidence}%</div>
                 </div>
                 <div className="w-full h-3 rounded-full bg-gray-200 overflow-hidden mb-3">
-                  <div 
-                    className={`h-full transition-all duration-1000 ${
-                      result.confidence > 85 ? "bg-gradient-to-r from-green-500 to-green-600" : 
-                      result.confidence > 75 ? "bg-gradient-to-r from-yellow-500 to-orange-500" : 
-                      "bg-gradient-to-r from-red-500 to-red-600"
-                    }`}
+                  <div
+                    className={`h-full transition-all duration-1000 ${result.confidence > 85 ? "bg-gradient-to-r from-green-500 to-green-600" :
+                        result.confidence > 75 ? "bg-gradient-to-r from-yellow-500 to-orange-500" :
+                          "bg-gradient-to-r from-red-500 to-red-600"
+                      }`}
                     style={{ width: `${result.confidence}%` }}
                   ></div>
                 </div>
                 <div className="text-sm text-gray-700 mb-2">Severity: <span className="font-medium">{result.severity}</span></div>
-                
+
                 {result.model_used && (
                   <div className="text-xs text-gray-500 mb-1">Model: {result.model_used}</div>
                 )}
-                
+
                 {result.dataset_used && (
                   <div className="text-xs text-gray-500 mb-1">Dataset: {result.dataset_used}</div>
                 )}
-                
+
                 {result.warning && (
                   <div className="text-xs text-orange-600 bg-orange-50 p-2 rounded mt-2">
                     ⚠️ {result.warning}
@@ -635,7 +634,7 @@ export default function DiseaseDetection() {
                       const specialtyMap: { [key: string]: string } = {
                         "🩺 Dermatology": "Dermatologist",
                         "👁️ Ophthalmology": "Ophthalmologist",
-                        "🫁 Respiratory & Chest": "Pulmonologist", 
+                        "🫁 Respiratory & Chest": "Pulmonologist",
                         "🩻 Oncology": "Oncologist",
                         "🔬 Pathology & Histology": "Pathologist",
                         "🫀 Anatomy & Organs": "General Practitioner"
@@ -648,7 +647,7 @@ export default function DiseaseDetection() {
                     <span className="text-sm text-gray-600">🕒 Hours</span>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setIframeUrl("")}
                   className="px-3 py-1 rounded-full bg-white/40 backdrop-blur-sm text-gray-600 hover:bg-white/50 transition-all duration-200 text-sm"
                 >
@@ -658,7 +657,7 @@ export default function DiseaseDetection() {
 
               {/* Google Maps Style Layout */}
               <div className="flex h-[500px] rounded-2xl overflow-hidden shadow-lg border border-white/20">
-                
+
                 {/* Left Panel - Google-Style Doctor Listings */}
                 <div className="w-2/5 bg-white border-r border-gray-200 overflow-y-auto">
                   <div className="p-4">
@@ -673,7 +672,7 @@ export default function DiseaseDetection() {
                     {/* Filter Options */}
                     <div className="mb-4">
                       <div className="text-sm font-medium text-gray-700 mb-2">Filter by Specialty:</div>
-                      <select 
+                      <select
                         value={selectedDoctorType}
                         onChange={(e) => setSelectedDoctorType(e.target.value)}
                         className="w-full p-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -687,93 +686,93 @@ export default function DiseaseDetection() {
                         <option value="General Practitioner">🫀 General Practitioner</option>
                       </select>
                     </div>
-                    
+
                     {/* Doctor listings */}
                     {doctorData
                       .filter(doctor => selectedDoctorType === "All" || doctor.specialty === selectedDoctorType)
                       .map((doctor, index) => (
-                      <div key={doctor.id} className="border-b border-gray-100 pb-4 mb-4 hover:bg-gray-50 p-3 rounded-lg cursor-pointer transition-colors">
-                        <div className="flex items-start gap-3">
-                          {/* Doctor/Clinic Image */}
-                          <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <span className="text-2xl">
-                              {index % 3 === 0 ? "👨‍⚕️" : index % 3 === 1 ? "👩‍⚕️" : "🏥"}
-                            </span>
-                          </div>
-                          
-                          <div className="flex-1 min-w-0">
-                            {/* Doctor/Clinic Name */}
-                            <h3 className="font-semibold text-gray-900 text-base hover:text-blue-600 cursor-pointer">
-                              {doctor.name}
-                            </h3>
-                            
-                            {/* Rating and Reviews */}
-                            <div className="flex items-center gap-2 mt-1">
-                              <div className="flex items-center">
-                                <span className="text-yellow-500 text-sm">
-                                  {"⭐".repeat(Math.floor(parseFloat(doctor.rating)))}
-                                </span>
-                                <span className="text-sm text-gray-600 ml-1">
-                                  {doctor.rating}
-                                </span>
-                              </div>
-                              <span className="text-sm text-gray-600">
-                                ({doctor.reviews}) • {doctor.specialty}
+                        <div key={doctor.id} className="border-b border-gray-100 pb-4 mb-4 hover:bg-gray-50 p-3 rounded-lg cursor-pointer transition-colors">
+                          <div className="flex items-start gap-3">
+                            {/* Doctor/Clinic Image */}
+                            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
+                              <span className="text-2xl">
+                                {index % 3 === 0 ? "👨‍⚕️" : index % 3 === 1 ? "👩‍⚕️" : "🏥"}
                               </span>
                             </div>
-                            
-                            {/* Address */}
-                            <div className="text-sm text-gray-600 mt-1 flex items-center">
-                              <span className="mr-1">📍</span>
-                              {doctor.address}
-                            </div>
-                            
-                            {/* Hours and Status */}
-                            <div className={`text-sm mt-1 ${doctor.status === 'open' ? 'text-green-600' : 'text-orange-600'}`}>
-                              {doctor.hours}
-                            </div>
-                            
-                            {/* Phone */}
-                            <div className="text-sm text-blue-600 mt-1 hover:underline cursor-pointer">
-                              📞 {doctor.phone}
-                            </div>
-                            
-                            {/* Review Preview */}
-                            <div className="text-xs text-blue-600 mt-2 bg-blue-50 p-2 rounded border-l-2 border-blue-200">
-                              <span className="text-blue-500">💬</span> "{doctor.review}"
-                            </div>
-                            
-                            {/* Action Buttons */}
-                            <div className="flex gap-2 mt-3">
-                              <button className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-                                Directions
-                              </button>
-                              <button className="text-xs px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors">
-                                Call
-                              </button>
-                              <button className="text-xs px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors">
-                                Website
-                              </button>
+
+                            <div className="flex-1 min-w-0">
+                              {/* Doctor/Clinic Name */}
+                              <h3 className="font-semibold text-gray-900 text-base hover:text-blue-600 cursor-pointer">
+                                {doctor.name}
+                              </h3>
+
+                              {/* Rating and Reviews */}
+                              <div className="flex items-center gap-2 mt-1">
+                                <div className="flex items-center">
+                                  <span className="text-yellow-500 text-sm">
+                                    {"⭐".repeat(Math.floor(parseFloat(doctor.rating)))}
+                                  </span>
+                                  <span className="text-sm text-gray-600 ml-1">
+                                    {doctor.rating}
+                                  </span>
+                                </div>
+                                <span className="text-sm text-gray-600">
+                                  ({doctor.reviews}) • {doctor.specialty}
+                                </span>
+                              </div>
+
+                              {/* Address */}
+                              <div className="text-sm text-gray-600 mt-1 flex items-center">
+                                <span className="mr-1">📍</span>
+                                {doctor.address}
+                              </div>
+
+                              {/* Hours and Status */}
+                              <div className={`text-sm mt-1 ${doctor.status === 'open' ? 'text-green-600' : 'text-orange-600'}`}>
+                                {doctor.hours}
+                              </div>
+
+                              {/* Phone */}
+                              <div className="text-sm text-blue-600 mt-1 hover:underline cursor-pointer">
+                                📞 {doctor.phone}
+                              </div>
+
+                              {/* Review Preview */}
+                              <div className="text-xs text-blue-600 mt-2 bg-blue-50 p-2 rounded border-l-2 border-blue-200">
+                                <span className="text-blue-500">💬</span> "{doctor.review}"
+                              </div>
+
+                              {/* Action Buttons */}
+                              <div className="flex gap-2 mt-3">
+                                <button className="text-xs px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+                                  Directions
+                                </button>
+                                <button className="text-xs px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors">
+                                  Call
+                                </button>
+                                <button className="text-xs px-3 py-1 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors">
+                                  Website
+                                </button>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                    
+                      ))}
+
                     {/* View More Button */}
-                    <button 
+                    <button
                       onClick={() => {
                         const specialtyMap: { [key: string]: string } = {
                           "🩺 Dermatology": "Dermatologist",
-                          "👁️ Ophthalmology": "Ophthalmologist", 
+                          "👁️ Ophthalmology": "Ophthalmologist",
                           "🫁 Respiratory & Chest": "Pulmonologist",
                           "🩻 Oncology": "Oncologist",
                           "🔬 Pathology & Histology": "Pathologist",
                           "🫀 Anatomy & Organs": "General Practitioner"
                         };
                         const specialty = specialtyMap[medicalCategory] || "General Practitioner";
-                        const searchQuery = userLocation 
-                          ? `${specialty} near ${userLocation.city}` 
+                        const searchQuery = userLocation
+                          ? `${specialty} near ${userLocation.city}`
                           : `${specialty} near me`;
                         window.open(`https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`, "_blank");
                       }}
@@ -788,8 +787,8 @@ export default function DiseaseDetection() {
                 <div className="w-3/5 relative bg-gray-100">
                   <iframe
                     src={`https://maps.google.com/maps?q=${encodeURIComponent(
-                      selectedDoctorType === "All" 
-                        ? `doctors near ${userLocation?.city || "me"}` 
+                      selectedDoctorType === "All"
+                        ? `doctors near ${userLocation?.city || "me"}`
                         : `${selectedDoctorType} near ${userLocation?.city || "me"}`
                     )}&output=embed&z=13${userLocation ? `&ll=${userLocation.lat},${userLocation.lng}` : ""}`}
                     width="100%"
@@ -800,7 +799,7 @@ export default function DiseaseDetection() {
                     referrerPolicy="no-referrer-when-downgrade"
                     title="Google Maps showing doctor locations"
                   />
-                  
+
 
                   {/* Google Maps Overlay Info */}
                   <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-3 text-sm">
@@ -827,7 +826,7 @@ export default function DiseaseDetection() {
                     const specialtyMap: { [key: string]: string } = {
                       "🩺 Dermatology": "Dermatologist",
                       "👁️ Ophthalmology": "Ophthalmologist",
-                      "🫁 Respiratory & Chest": "Pulmonologist", 
+                      "🫁 Respiratory & Chest": "Pulmonologist",
                       "🩻 Oncology": "Oncologist",
                       "🔬 Pathology & Histology": "Pathologist",
                       "🫀 Anatomy & Organs": "General Practitioner"
@@ -835,19 +834,19 @@ export default function DiseaseDetection() {
                     return specialtyMap[medicalCategory] || "General Practitioner";
                   })()} near {userLocation?.city || "your location"}
                 </div>
-                <button 
+                <button
                   onClick={() => {
                     const specialtyMap: { [key: string]: string } = {
                       "🩺 Dermatology": "Dermatologist",
-                      "👁️ Ophthalmology": "Ophthalmologist", 
+                      "👁️ Ophthalmology": "Ophthalmologist",
                       "🫁 Respiratory & Chest": "Pulmonologist",
                       "🩻 Oncology": "Oncologist",
                       "🔬 Pathology & Histology": "Pathologist",
                       "🫀 Anatomy & Organs": "General Practitioner"
                     };
                     const specialty = specialtyMap[medicalCategory] || "General Practitioner";
-                    const searchQuery = userLocation 
-                      ? `${specialty} near ${userLocation.city}` 
+                    const searchQuery = userLocation
+                      ? `${specialty} near ${userLocation.city}`
                       : `${specialty} near me`;
                     window.open(`https://www.google.com/maps/search/${encodeURIComponent(searchQuery)}`, "_blank");
                   }}

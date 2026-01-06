@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -284,9 +284,8 @@ export default function GovernmentYojana() {
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
       <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => { }} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
 
-      <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}>
+      <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}>
         <header className="mb-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}

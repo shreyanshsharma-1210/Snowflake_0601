@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
-import { FloatingTopBar } from "@/components/FloatingTopBar";
+
 import { useSidebar } from "@/contexts/SidebarContext";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -20,11 +20,11 @@ export default function BloodBank() {
 
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
-      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => {}} />
-      <FloatingTopBar isCollapsed={isCollapsed} />
+      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => { }} />
 
-      <motion.div 
-        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}
+
+      <motion.div
+        className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} p-6`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
