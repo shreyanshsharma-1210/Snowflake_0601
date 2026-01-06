@@ -43,7 +43,7 @@ export const FloatingSidebar = ({
   const scale = useResponsiveScale(1024, 0.65); // Minimum 65% scale
 
   const menuItems: MenuItem[] = [
-    { id: "home", label: "Dashboard", icon: Home, href: "/dashboard" },
+    { id: "home", label: "ArogyaSaarthi", icon: Home, href: "/dashboard" },
     {
       id: "government-yojana",
       label: "Government Yojana",
