@@ -224,11 +224,7 @@ export default function AmbulanceServices() {
   const [routeIndex, setRouteIndex] = useState(0);
 
   // Dynamic emergency contacts (persisted locally)
-  const [contacts, setContacts] = useState<{ name: string; phone: string }[]>([
-    { name: "Riya Sharma", phone: "+91 98765 43210" },
-    { name: "Arjun Verma", phone: "+91 91234 56780" },
-    { name: "Family Group", phone: "+91 90000 00000" },
-  ]);
+  const [contacts, setContacts] = useState<{ name: string; phone: string }[]>([]);
   const [newContact, setNewContact] = useState({ name: "", phone: "" });
 
   useEffect(() => {
@@ -890,12 +886,12 @@ export default function AmbulanceServices() {
 
                   {/* Contacts list */}
                   {contacts.map((c, i) => (
-                    <div key={`${c.name}-${i}`} className="flex items-center justify-between rounded-xl border bg-white/60 p-3">
-                      <div>
-                        <div className="text-sm font-medium">{c.name}</div>
-                        <div className="text-xs text-muted-foreground">{c.phone}</div>
+                    <div key={`${c.name}-${i}`} className="flex items-center justify-between gap-3 rounded-xl border bg-white/60 p-3">
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <div className="text-sm font-medium truncate">{c.name}</div>
+                        <div className="text-xs text-muted-foreground truncate break-all">{c.phone}</div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <Button size="sm" className="bg-blue-600 text-white hover:bg-blue-700 border-blue-600" onClick={async () => {
                           // Send call button press to webhook only (no dialer redirect)
                           const success = await sendCallToWebhook(c.phone);
