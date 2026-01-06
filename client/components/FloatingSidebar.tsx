@@ -142,7 +142,7 @@ export const FloatingSidebar = ({
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
                   >
-                    Dashboard
+                    ArogyaSaarthi
                   </motion.span>
                 )}
               </AnimatePresence>

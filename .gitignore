@@ -49,6 +49,15 @@ server/python/checkpoints/*.pt
 **/venv/**
 **/__pycache__/**
 
+# Analysis & documentation files (auto-generated)
+ANALYSIS_INDEX.md
+ANALYSIS_SUMMARY.md
+DEVELOPER_CONTEXT.md
+QUICK_REFERENCE.md
+CODEBASE_ANALYSIS.md
+README_ANALYSIS.md
+START_HERE.md
+
 # Large binary files
 *.exe
 *.msi

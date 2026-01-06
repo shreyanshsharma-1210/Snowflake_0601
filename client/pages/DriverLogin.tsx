@@ -65,7 +65,7 @@ export default function DriverLogin() {
                         <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center shadow-lg shadow-green-200">
                             <span className="text-white font-bold text-xl">HS</span>
                         </div>
-                        <span className="text-2xl font-bold text-gray-900">Health Saarthi</span>
+                        <span className="text-2xl font-bold text-gray-900">ArogyaSaarthi</span>
                     </Link>
                     <div className="mt-4 flex items-center justify-center gap-2 text-emerald-700 bg-emerald-50 px-4 py-1.5 rounded-full border border-emerald-100">
                         <Ambulance className="w-4 h-4" />

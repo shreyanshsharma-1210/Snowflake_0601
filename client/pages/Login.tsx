@@ -125,7 +125,7 @@ export default function Login() {
                     </span>
                   </motion.div>
                   <span className="text-2xl font-bold text-gray-800 group-hover:text-green-600 transition-colors">
-                    Health Saarthi
+                    ArogyaSaarthi
                   </span>
                 </Link>
               </motion.div>
@@ -433,7 +433,7 @@ export default function Login() {
                 </h3>
                 <p className="text-gray-600 leading-relaxed -mt-px">
                   Join thousands of patients and healthcare professionals who trust
-                  Health Saarthi for comprehensive healthcare management. From AI-powered
+                  ArogyaSaarthi for comprehensive healthcare management. From AI-powered
                   disease detection to personalized health insights, experience the
                   future of digital healthcare.
                 </p>
