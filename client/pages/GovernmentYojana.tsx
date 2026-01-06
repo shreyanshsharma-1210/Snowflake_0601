@@ -424,7 +424,7 @@ export default function GovernmentYojana() {
               {language === 'en' ? '🎯 Quick Service Finder' : '🎯 त्वरित सेवा खोजकर्ता'}
             </h4>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-full overflow-hidden">
               <Button
                 variant="outline"
                 className="justify-start h-auto p-4"

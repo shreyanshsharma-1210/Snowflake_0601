@@ -67,8 +67,10 @@ interface QuickAction {
 
 // Initialize Vapi Web SDK for browser-based voice calls
 const initializeVapiExternal = () => {
-  // Hardcoded API key
-  const publicKey = "db1e9da3-b453-4b22-af2e-02c742d81b68";
+  // Read API key from environment variable (Vite uses import.meta.env)
+  const publicKey = import.meta.env.VITE_VAPI_PUBLIC_KEY || "40b45ea0-7541-40e7-bb44-5d8ddf6c56bc";
+
+  console.log("📋 Reading Vapi key from environment:", import.meta.env.VITE_VAPI_PUBLIC_KEY ? "YES" : "NO (using fallback)");
 
   if (!publicKey) {
     console.error(
@@ -566,7 +568,7 @@ export default function Chatbot() {
       }
     });
 
-    vapiInstance.on("error", (error: any) => {
+    vapiInstance.on("error", async (error: any) => {
       // Comprehensive error serialization to fix [object Object] issue
       let errorMessage = "Unknown error";
       let debugInfo = "";
@@ -577,7 +579,34 @@ export default function Chatbot() {
         console.error("ERROR TYPE:", typeof error);
         console.error("ERROR CONSTRUCTOR:", error?.constructor?.name);
 
-        if (typeof error === "string") {
+        // Log all object keys and values
+        if (error && typeof error === 'object') {
+          console.error("ERROR KEYS:", Object.keys(error));
+          console.error("ERROR VALUES:", Object.values(error));
+          try {
+            console.error("ERROR JSON:", JSON.stringify(error, null, 2));
+          } catch (e) {
+            console.error("Cannot stringify error object");
+          }
+        }
+
+        // Check for Response-like object (duck typing to be safe)
+        if (error && typeof error === 'object' && 'status' in error && 'statusText' in error) {
+          errorMessage = `HTTP Error: ${error.status} ${error.statusText}`;
+          try {
+            // If it has a text() method, try to read it
+            if (typeof error.text === 'function') {
+              error.text().then((body: string) => {
+                if (body) {
+                  console.error("Vapi Error Body:", body);
+                  addDebugLog(`📄 Error details: ${body.substring(0, 200)}`);
+                }
+              }).catch((e: any) => console.error("Could not read error body:", e));
+            }
+          } catch (e) {
+            // Ignore body parsing error
+          }
+        } else if (typeof error === "string") {
           errorMessage = error;
         } else if (error instanceof Error) {
           errorMessage = error.message || error.toString();
@@ -635,6 +664,16 @@ export default function Chatbot() {
         addDebugLog(
           "🔑 Tip: Make sure you're using the correct key type (public key for Web SDK)",
         );
+      }
+
+      // Final safety check: Never show [object Response] or [object Object]
+      if (
+        userFriendlyMessage.includes("[object Response]") ||
+        userFriendlyMessage.includes("[object Object]") ||
+        userFriendlyMessage === "[object Response]" ||
+        userFriendlyMessage === "[object Object]"
+      ) {
+        userFriendlyMessage = "Vapi Connection Error: The request failed (400 Bad Request). This usually means the API key or Assistant ID is invalid or doesn't have the correct permissions. Please verify your Vapi credentials.";
       }
 
       setVapiError(userFriendlyMessage);
@@ -781,10 +820,9 @@ export default function Chatbot() {
         setVapiError(null);
         setVapiStatus("starting");
 
-        // Check environment credentials
-        // Hardcoded credentials
-        const publicKey = "db1e9da3-b453-4b22-af2e-02c742d81b68";
-        const assistantId = "783e3ec5-1c01-408c-abc1-06d7ddbfe92b";
+        // Read credentials from environment variables
+        const publicKey = import.meta.env.VITE_VAPI_PUBLIC_KEY || "40b45ea0-7541-40e7-bb44-5d8ddf6c56bc";
+        const assistantId = import.meta.env.VITE_VAPI_ASSISTANT_ID || "93db31d3-1657-40e2-8665-0158cfca8c4c";
 
         addDebugLog(`🔑 Using public key: ${publicKey.substring(0, 8)}...`);
         addDebugLog(`🤖 Using assistant: ${assistantId}`);
