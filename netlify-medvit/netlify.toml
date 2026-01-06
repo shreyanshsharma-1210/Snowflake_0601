@@ -1,0 +1,15 @@
+[build]
+  command = "npm install"
+  functions = "netlify/functions"
+  publish = "public"
+
+[functions]
+  python_runtime = "python3.9"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[build.environment]
+  PYTHON_VERSION = "3.9"

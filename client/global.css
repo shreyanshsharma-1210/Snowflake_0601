@@ -1,0 +1,394 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Synera:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Proxima+Nova:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  
+  /* Mobile-first responsive styles */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+  }
+  
+  html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    touch-action: manipulation;
+  }
+  
+  body {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Safe area insets for mobile devices */
+  @supports (padding: max(0px)) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+    }
+  }
+  
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 320 60% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 320 60% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 320 60% 60%;
+
+    --radius: 1rem;
+
+    /* Brand palette (Bento UI inspired) */
+    --primary: 216.9 92.8% 60.6%; /* #3B82F6 Soft Blue */
+    --primary-foreground: 0 0% 100%;
+
+    --teal: 174 78% 40%; /* #14B8A6 Teal */
+    --teal-foreground: 0 0% 100%;
+
+    --success: 140 60% 45%; /* #22C55E Vibrant Green */
+    --success-foreground: 0 0% 100%;
+
+    --warm: 23 95% 53%; /* #F97316 Warm Orange */
+    --warm-foreground: 0 0% 100%;
+
+    --danger: 0 65% 51%; /* #DC2626 Red */
+    --danger-foreground: 0 0% 100%;
+
+    --off-white: 210 20% 98%; /* #F9FAFB */
+    --cool-gray: 217.6 6% 45.9%; /* #6B7280 */
+    --charcoal: 222.2 0% 6.5%; /* #111827 */
+
+    /* Custom colors for the creative design */
+    --purple-start: 280 100% 30%;
+    --purple-end: 320 100% 20%;
+    --pink-accent: 320 80% 70%;
+    --pink-button: 320 60% 60%;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Proxima Nova", "Poppins", sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Synera", "Proxima Nova", "Space Grotesk", sans-serif;
+  }
+
+  /* Dashboard specific font overrides */
+  .dashboard-page {
+    font-family: "Poppins", sans-serif;
+  }
+
+  .dashboard-page h1,
+  .dashboard-page h2,
+  .dashboard-page h3,
+  .dashboard-page h4,
+  .dashboard-page h5,
+  .dashboard-page h6 {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  /* Dashboard component specific styles */
+  .dashboard-title {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  .dashboard-text {
+    font-family: "Poppins", sans-serif;
+  }
+}
+
+@layer components {
+  .animated-text {
+    background: linear-gradient(
+      90deg,
+      #1a1a1a 0%,
+      #2d2d2d 25%,
+      #404040 50%,
+      #1a1a1a 75%,
+      #000000 100%
+    );
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-shift 4s ease-in-out infinite;
+    -webkit-text-stroke: 1px #000000;
+  }
+
+  @keyframes gradient-shift {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  .text-glow {
+    -webkit-text-stroke: 1px #000000;
+    text-shadow:
+      1px 1px 0px #000000,
+      -1px -1px 0px #000000,
+      1px -1px 0px #000000,
+      -1px 1px 0px #000000;
+  }
+
+  .pulse-animation {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      transform: scale(1.02);
+      filter: brightness(1.1);
+    }
+  }
+
+  /* Custom scrollbar styles */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Volume slider styles */
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #9333ea;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #9333ea;
+    cursor: pointer;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .slider::-webkit-slider-track {
+    height: 4px;
+    border-radius: 2px;
+    background: transparent;
+  }
+
+  .slider::-moz-range-track {
+    height: 4px;
+    border-radius: 2px;
+    background: transparent;
+  }
+
+  /* Glass morphism cards */
+  .glass-card {
+    position: relative;
+    overflow: hidden;
+    background: rgba(249, 250, 251, 0.65); /* soft pastel off-white */
+    border: 1.5px solid rgba(255, 255, 255, 0.6);
+    box-shadow:
+      0 6px 18px rgba(17, 24, 39, 0.06),
+      0 -4px 12px rgba(17, 24, 39, 0.03),
+      4px 0 8px rgba(17, 24, 39, 0.02),
+      -4px 0 8px rgba(17, 24, 39, 0.02);
+    backdrop-filter: blur(8px) saturate(120%);
+    -webkit-backdrop-filter: blur(8px) saturate(120%);
+    border-radius: 1rem;
+  }
+
+  .glass-card-lg {
+    @apply glass-card;
+    border-radius: 1.5rem;
+    backdrop-filter: blur(10px) saturate(115%);
+    -webkit-backdrop-filter: blur(10px) saturate(115%);
+    border-radius: 1.25rem;
+  }
+  
+  /* Prevent horizontal scroll - critical for scaled layouts */
+  body, html {
+    max-width: 100vw;
+    overflow-x: hidden;
+    position: relative;
+  }
+  
+  /* Smooth scaling transitions */
+  [style*="transform: scale"] {
+    transition: transform 0.3s ease-out;
+  }
+  
+  /* Ensure scaled content doesn't cause scroll issues */
+  @media (max-width: 1023px) {
+    body {
+      overflow-x: hidden !important;
+    }
+    
+    /* Hide any overflow from scaled elements */
+    .dashboard-page,
+    [class*="min-h-screen"] {
+      overflow-x: hidden;
+    }
+  }
+  
+  /* Mobile-safe padding */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 1rem);
+  }
+  
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 1rem);
+  }
+  
+  /* Ensure touch targets remain accessible when scaled */
+  @media (max-width: 1023px) {
+    button, .btn, a {
+      min-height: 36px;
+      min-width: 36px;
+    }
+    
+    /* Ensure text remains readable when scaled */
+    body {
+      font-size: 16px !important;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+    
+    /* Prevent text from becoming too small - use font-size with !important */
+    * {
+      font-size: max(12px, 1em) !important;
+    }
+  }
+  
+  /* 2x2 Grid utility for mobile */
+  .grid-2x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .grid-2x2 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid-2x2 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

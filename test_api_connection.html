@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedViT API Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { border-left: 5px solid #4CAF50; }
+        .error { border-left: 5px solid #f44336; }
+        .warning { border-left: 5px solid #ff9800; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏥 MedViT API Connection Test</h1>
+        <p>Use this tool to test the connection to your MedViT API server.</p>
+        
+        <div>
+            <button onclick="testHealth()">🔍 Test Health Endpoint</button>
+            <button onclick="testDatasets()">📊 Test Datasets Endpoint</button>
+            <button onclick="testPrediction()">🤖 Test Prediction (Sample)</button>
+            <button onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div class="result warning">
+            <strong>📋 Troubleshooting Steps:</strong>
+            
+            1. <strong>Check if MedViT server is running:</strong>
+               - Open terminal in: inno/server/python/
+               - Run: python medvit_api.py
+               - Should see: "Server: http://localhost:5001"
+            
+            2. <strong>Check firewall/antivirus:</strong>
+               - Ensure port 5001 is not blocked
+               - Temporarily disable antivirus if needed
+            
+            3. <strong>Check browser console:</strong>
+               - Press F12 → Console tab
+               - Look for CORS or network errors
+            
+            4. <strong>Try different port:</strong>
+               - Edit medvit_api.py: change port=5001 to port=5002
+               - Update frontend URL accordingly
+            
+            5. <strong>Install missing dependencies:</strong>
+               - pip install flask flask-cors torch torchvision pillow
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:5001/api/medvit';
+        
+        function addResult(message, type = 'success') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(div);
+            results.scrollTop = results.scrollHeight;
+        }
+        
+        async function testHealth() {
+            addResult('Testing health endpoint...', 'warning');
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                if (response.ok) {
+                    const data = await response.json();
+                    addResult(`✅ Health check passed!\nStatus: ${data.status}\nService: ${data.service}\nModels cached: ${data.models_cached}`, 'success');
+                } else {
+                    addResult(`❌ Health check failed: ${response.status} ${response.statusText}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Connection failed: ${error.message}\n\nPossible causes:\n- MedViT server not running\n- Port 5001 blocked\n- CORS issues`, 'error');
+            }
+        }
+        
+        async function testDatasets() {
+            addResult('Testing datasets endpoint...', 'warning');
+            try {
+                const response = await fetch(`${API_BASE}/datasets`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const datasets = Object.keys(data);
+                    addResult(`✅ Datasets loaded successfully!\nAvailable datasets: ${datasets.join(', ')}`, 'success');
+                } else {
+                    addResult(`❌ Datasets request failed: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Datasets request failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function testPrediction() {
+            addResult('Testing prediction with sample data...', 'warning');
+            
+            // Create a simple test image (1x1 red pixel)
+            const canvas = document.createElement('canvas');
+            canvas.width = 224;
+            canvas.height = 224;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ff0000';
+            ctx.fillRect(0, 0, 224, 224);
+            const imageData = canvas.toDataURL('image/png');
+            
+            try {
+                const response = await fetch(`${API_BASE}/predict`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: imageData,
+                        dataset: 'ChestMNIST',
+                        model_type: 'MedViT-Large',
+                        image_size: 224
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        addResult(`✅ Prediction successful!\nTop prediction: ${data.top_prediction}\nConfidence: ${data.confidence.toFixed(2)}%\nModel: ${data.model_used}\nUsing pretrained: ${data.using_pretrained}`, 'success');
+                        if (data.warning) {
+                            addResult(`⚠️ Warning: ${data.warning}`, 'warning');
+                        }
+                    } else {
+                        addResult(`❌ Prediction failed: ${data.error}`, 'error');
+                    }
+                } else {
+                    const errorText = await response.text();
+                    addResult(`❌ Prediction request failed: ${response.status}\n${errorText}`, 'error');
+                }
+            } catch (error) {
+                addResult(`❌ Prediction request failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+        
+        // Auto-test on page load
+        window.onload = () => {
+            addResult('🚀 MedViT API Connection Tester loaded', 'success');
+            addResult('Click "Test Health Endpoint" to start testing', 'warning');
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+{
+  "assessment": {
+    "name": "Mental Health Self-Assessment",
+    "description": "This comprehensive assessment uses GAD-7 and PHQ-9 questionnaires along with lifestyle factors to evaluate your mental wellbeing. It is private, confidential, and designed to help you reflect on your overall health.",
+    "categories": ["Anxiety (GAD-7)", "Depression (PHQ-9)", "Lifestyle", "Social Support", "Work/Study", "Physical Health", "Coping"],
+    "scoring_scale": {
+      "options": [
+        { "value": 0, "label": "Not at all" },
+        { "value": 1, "label": "Several days" },
+        { "value": 2, "label": "More than half the days" },
+        { "value": 3, "label": "Nearly every day" }
+      ]
+    },
+    "disclaimer": "This assessment is for informational purposes only and does not replace professional medical advice. If you're experiencing severe symptoms, please consult a healthcare professional."
+  },
+  "questions": [
+    {
+      "id": "GAD1",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by feeling nervous, anxious, or on edge?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD2",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by not being able to stop or control worrying?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD3",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by worrying too much about different things?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD4",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by trouble relaxing?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD5",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by being so restless that it is hard to sit still?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD6",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by becoming easily annoyed or irritable?",
+      "type": "scale"
+    },
+    {
+      "id": "GAD7",
+      "category": "GAD-7",
+      "text": "Over the last 2 weeks, how often have you been bothered by feeling afraid as if something awful might happen?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ1",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by little interest or pleasure in doing things?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ2",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by feeling down, depressed, or hopeless?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ3",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by trouble falling or staying asleep, or sleeping too much?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ4",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by feeling tired or having little energy?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ5",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by poor appetite or overeating?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ6",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by feeling bad about yourself, or that you are a failure or have let yourself or your family down?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ7",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by trouble concentrating on things, such as reading the newspaper or watching television?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ8",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by moving or speaking so slowly that other people could have noticed? Or the opposite - being so fidgety or restless that you have been moving around a lot more than usual?",
+      "type": "scale"
+    },
+    {
+      "id": "PHQ9",
+      "category": "PHQ-9",
+      "text": "Over the last 2 weeks, how often have you been bothered by thoughts that you would be better off dead, or of hurting yourself in some way?",
+      "type": "scale"
+    },
+    {
+      "id": "LIFE1",
+      "category": "Lifestyle",
+      "text": "On average, how many hours of sleep do you get per night?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Less than 4 hours" },
+        { "value": 1, "label": "4–6 hours" },
+        { "value": 2, "label": "6–8 hours" },
+        { "value": 3, "label": "More than 8 hours" }
+      ]
+    },
+    {
+      "id": "LIFE2",
+      "category": "Lifestyle",
+      "text": "Do you feel refreshed after waking up?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Sometimes" },
+        { "value": 2, "label": "Often" },
+        { "value": 3, "label": "Almost always" }
+      ]
+    },
+    {
+      "id": "LIFE3",
+      "category": "Lifestyle",
+      "text": "How would you rate your overall diet quality?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Poor" },
+        { "value": 1, "label": "Fair" },
+        { "value": 2, "label": "Good" },
+        { "value": 3, "label": "Excellent" }
+      ]
+    },
+    {
+      "id": "SOC1",
+      "category": "Social Support",
+      "text": "Do you feel you have someone you can talk to when feeling stressed or sad?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Rarely" },
+        { "value": 2, "label": "Sometimes" },
+        { "value": 3, "label": "Often" }
+      ]
+    },
+    {
+      "id": "SOC2",
+      "category": "Social Support",
+      "text": "How connected do you feel with family or friends?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Not at all connected" },
+        { "value": 1, "label": "Slightly connected" },
+        { "value": 2, "label": "Moderately connected" },
+        { "value": 3, "label": "Very connected" }
+      ]
+    },
+    {
+      "id": "SOC3",
+      "category": "Social Support",
+      "text": "How often do you engage in social activities or spend time with others?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Once a month" },
+        { "value": 2, "label": "Once a week" },
+        { "value": 3, "label": "Several times a week" }
+      ]
+    },
+    {
+      "id": "WORK1",
+      "category": "Work/Study",
+      "text": "How often do you feel overwhelmed by your work or studies?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Not at all" },
+        { "value": 1, "label": "Sometimes" },
+        { "value": 2, "label": "Often" },
+        { "value": 3, "label": "Almost every day" }
+      ]
+    },
+    {
+      "id": "WORK2",
+      "category": "Work/Study",
+      "text": "Do you find it difficult to balance responsibilities (work, school, personal life)?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Rarely" },
+        { "value": 2, "label": "Sometimes" },
+        { "value": 3, "label": "Often" }
+      ]
+    },
+    {
+      "id": "WORK3",
+      "category": "Work/Study",
+      "text": "How satisfied are you with your current work or study situation?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Very dissatisfied" },
+        { "value": 1, "label": "Somewhat dissatisfied" },
+        { "value": 2, "label": "Somewhat satisfied" },
+        { "value": 3, "label": "Very satisfied" }
+      ]
+    },
+    {
+      "id": "BODY1",
+      "category": "Physical Health",
+      "text": "Do you experience physical symptoms such as headaches, stomach issues, or muscle tension when stressed?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Sometimes" },
+        { "value": 2, "label": "Often" },
+        { "value": 3, "label": "Almost always" }
+      ]
+    },
+    {
+      "id": "BODY2",
+      "category": "Physical Health",
+      "text": "How often do you exercise or engage in physical activity?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Once a week" },
+        { "value": 2, "label": "2–3 times a week" },
+        { "value": 3, "label": "4 or more times a week" }
+      ]
+    },
+    {
+      "id": "BODY3",
+      "category": "Physical Health",
+      "text": "How would you rate your overall physical health?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Poor" },
+        { "value": 1, "label": "Fair" },
+        { "value": 2, "label": "Good" },
+        { "value": 3, "label": "Excellent" }
+      ]
+    },
+    {
+      "id": "COPE1",
+      "category": "Coping",
+      "text": "When feeling low or anxious, do you use healthy coping strategies (like journaling, meditation, or hobbies)?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Rarely" },
+        { "value": 2, "label": "Sometimes" },
+        { "value": 3, "label": "Often" }
+      ]
+    },
+    {
+      "id": "COPE2",
+      "category": "Coping",
+      "text": "Do you rely on substances (alcohol, nicotine, drugs) when stressed?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Never" },
+        { "value": 1, "label": "Rarely" },
+        { "value": 2, "label": "Sometimes" },
+        { "value": 3, "label": "Often" }
+      ]
+    },
+    {
+      "id": "COPE3",
+      "category": "Coping",
+      "text": "How confident do you feel in your ability to handle stress and difficult situations?",
+      "type": "custom",
+      "options": [
+        { "value": 0, "label": "Not confident at all" },
+        { "value": 1, "label": "Slightly confident" },
+        { "value": 2, "label": "Moderately confident" },
+        { "value": 3, "label": "Very confident" }
+      ]
+    },
+    {
+      "id": "CTRL1",
+      "category": "Control",
+      "text": "Do you often feel restless or find it hard to stay still? (Consistency check)",
+      "type": "scale"
+    },
+    {
+      "id": "CTRL2",
+      "category": "Control",
+      "text": "Do you struggle with sleep quality, either too little or too much? (Consistency check)",
+      "type": "scale"
+    }
+  ],
+  "interpretation": {
+    "GAD-7": {
+      "0-4": {
+        "level": "Minimal anxiety",
+        "description": "Your anxiety levels appear to be minimal. This suggests you're managing stress well.",
+        "color": "green"
+      },
+      "5-9": {
+        "level": "Mild anxiety",
+        "description": "You may be experiencing mild anxiety. Consider stress management techniques.",
+        "color": "yellow"
+      },
+      "10-14": {
+        "level": "Moderate anxiety",
+        "description": "You're experiencing moderate anxiety. Consider speaking with a healthcare professional.",
+        "color": "orange"
+      },
+      "15-21": {
+        "level": "Severe anxiety",
+        "description": "You're experiencing severe anxiety. We strongly recommend consulting a healthcare professional.",
+        "color": "red"
+      }
+    },
+    "PHQ-9": {
+      "0-4": {
+        "level": "Minimal depression",
+        "description": "Your mood appears to be stable with minimal signs of depression.",
+        "color": "green"
+      },
+      "5-9": {
+        "level": "Mild depression",
+        "description": "You may be experiencing mild depression. Consider lifestyle changes and support.",
+        "color": "yellow"
+      },
+      "10-14": {
+        "level": "Moderate depression",
+        "description": "You're experiencing moderate depression. Consider professional support.",
+        "color": "orange"
+      },
+      "15-19": {
+        "level": "Moderately severe depression",
+        "description": "You're experiencing moderately severe depression. Professional help is recommended.",
+        "color": "red"
+      },
+      "20-27": {
+        "level": "Severe depression",
+        "description": "You're experiencing severe depression. Please seek immediate professional help.",
+        "color": "red"
+      }
+    }
+  },
+  "recommendations": {
+    "low_risk": [
+      "Continue maintaining your current healthy habits",
+      "Practice regular mindfulness or meditation",
+      "Maintain social connections and support networks",
+      "Keep up with regular exercise and good sleep hygiene"
+    ],
+    "moderate_risk": [
+      "Consider speaking with a counselor or therapist",
+      "Implement stress reduction techniques like deep breathing",
+      "Prioritize sleep and establish a regular sleep schedule",
+      "Engage in regular physical activity",
+      "Connect with supportive friends and family"
+    ],
+    "high_risk": [
+      "Seek professional help from a mental health provider",
+      "Contact a crisis helpline if you're having thoughts of self-harm",
+      "Reach out to trusted friends, family, or support groups",
+      "Consider medication evaluation with a healthcare provider",
+      "Establish safety plans and coping strategies"
+    ]
+  },
+  "confidence_logic": {
+    "base_score": 70,
+    "completion_bonus": 10,
+    "consistency_bonus": 20,
+    "rushed_penalty": 20,
+    "time_threshold_seconds": 300,
+    "note": "Confidence score is calculated based on response consistency, completion rate, and response time patterns."
+  },
+  "crisis_resources": {
+    "title": "Crisis Resources",
+    "description": "If you're experiencing thoughts of self-harm or suicide, please reach out for help immediately:",
+    "resources": [
+      {
+        "name": "National Suicide Prevention Lifeline",
+        "contact": "988",
+        "description": "24/7 crisis support"
+      },
+      {
+        "name": "Crisis Text Line",
+        "contact": "Text HOME to 741741",
+        "description": "24/7 text-based crisis support"
+      },
+      {
+        "name": "Emergency Services",
+        "contact": "911",
+        "description": "For immediate emergency assistance"
+      }
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test MedViT API Connection</title>
+</head>
+<body>
+    <h1>MedViT API Connection Test</h1>
+    <button onclick="testHealthCheck()">Test Health Check</button>
+    <button onclick="testPrediction()">Test Prediction</button>
+    <div id="results"></div>
+
+    <script>
+        async function testHealthCheck() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Testing health check...';
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/medvit/health');
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h3>Health Check Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>API Status: ${data.status}</p>
+                    <p>Service: ${data.service}</p>
+                    <p style="color: green;">✅ Connection Successful!</p>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h3>Health Check Failed:</h3>
+                    <p style="color: red;">❌ Error: ${error.message}</p>
+                `;
+            }
+        }
+
+        async function testPrediction() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = 'Testing prediction...';
+            
+            // Simple 1x1 pixel test image
+            const testImage = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==';
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/medvit/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        image: testImage,
+                        dataset: 'PathMNIST',
+                        model_type: 'MedViT-Large',
+                        image_size: 224
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h3>Prediction Result:</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Success: ${data.success}</p>
+                    <p>Top Prediction: ${data.top_prediction}</p>
+                    <p>Confidence: ${data.confidence}%</p>
+                    <p style="color: green;">✅ Prediction Successful!</p>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <h3>Prediction Failed:</h3>
+                    <p style="color: red;">❌ Error: ${error.message}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

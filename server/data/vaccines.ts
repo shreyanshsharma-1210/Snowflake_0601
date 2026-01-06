@@ -1,0 +1,507 @@
+import { Gender, SeverityLevel, VaccineRecommendation } from "@shared/api";
+
+interface RawVaccineRow {
+  age: number;
+  gender: string;
+  vaccine: string;
+  disease: string;
+  severity: string;
+  notes?: string;
+}
+
+const rawSchedule: RawVaccineRow[] = [
+  {
+    age: 0,
+    gender: "M/F",
+    vaccine: "BCG",
+    disease: "Tuberculosis",
+    severity: "Critical",
+    notes: "At birth in TB-prevalent countries",
+  },
+  {
+    age: 0,
+    gender: "M/F",
+    vaccine: "HepB (Birth dose)",
+    disease: "Hepatitis B",
+    severity: "Critical",
+    notes: "Within 24 hrs of birth",
+  },
+  {
+    age: 0.1,
+    gender: "M/F",
+    vaccine: "DTP/DTaP",
+    disease: "Diphtheria, Tetanus, Pertussis",
+    severity: "Critical",
+    notes: "6 weeks, Dose 1",
+  },
+  {
+    age: 0.1,
+    gender: "M/F",
+    vaccine: "Hib",
+    disease: "Haemophilus influenzae type b",
+    severity: "Critical",
+    notes: "6 weeks, Dose 1",
+  },
+  {
+    age: 0.1,
+    gender: "M/F",
+    vaccine: "Polio (IPV/OPV)",
+    disease: "Poliomyelitis",
+    severity: "Critical",
+    notes: "6 weeks, Dose 1",
+  },
+  {
+    age: 0.1,
+    gender: "M/F",
+    vaccine: "PCV",
+    disease: "Pneumococcal disease",
+    severity: "Moderate",
+    notes: "6 weeks, Dose 1",
+  },
+  {
+    age: 0.1,
+    gender: "M/F",
+    vaccine: "Rotavirus",
+    disease: "Rotavirus diarrhea",
+    severity: "Moderate",
+    notes: "6 weeks, Dose 1",
+  },
+  {
+    age: 0.25,
+    gender: "M/F",
+    vaccine: "DTP/DTaP",
+    disease: "Diphtheria, Tetanus, Pertussis",
+    severity: "Critical",
+    notes: "10 weeks, Dose 2",
+  },
+  {
+    age: 0.25,
+    gender: "M/F",
+    vaccine: "Hib",
+    disease: "Haemophilus influenzae type b",
+    severity: "Critical",
+    notes: "10 weeks, Dose 2",
+  },
+  {
+    age: 0.25,
+    gender: "M/F",
+    vaccine: "Polio",
+    disease: "Poliomyelitis",
+    severity: "Critical",
+    notes: "10 weeks, Dose 2",
+  },
+  {
+    age: 0.25,
+    gender: "M/F",
+    vaccine: "PCV",
+    disease: "Pneumococcal disease",
+    severity: "Moderate",
+    notes: "10 weeks, Dose 2",
+  },
+  {
+    age: 0.25,
+    gender: "M/F",
+    vaccine: "Rotavirus",
+    disease: "Rotavirus diarrhea",
+    severity: "Moderate",
+    notes: "10 weeks, Dose 2",
+  },
+  {
+    age: 0.35,
+    gender: "M/F",
+    vaccine: "DTP/DTaP",
+    disease: "Diphtheria, Tetanus, Pertussis",
+    severity: "Critical",
+    notes: "14 weeks, Dose 3",
+  },
+  {
+    age: 0.35,
+    gender: "M/F",
+    vaccine: "Hib",
+    disease: "Haemophilus influenzae type b",
+    severity: "Critical",
+    notes: "14 weeks, Dose 3",
+  },
+  {
+    age: 0.35,
+    gender: "M/F",
+    vaccine: "Polio",
+    disease: "Poliomyelitis",
+    severity: "Critical",
+    notes: "14 weeks, Dose 3",
+  },
+  {
+    age: 0.35,
+    gender: "M/F",
+    vaccine: "PCV",
+    disease: "Pneumococcal disease",
+    severity: "Moderate",
+    notes: "14 weeks, Dose 3",
+  },
+  {
+    age: 0.75,
+    gender: "M/F",
+    vaccine: "Measles/MMR",
+    disease: "Measles, Mumps, Rubella",
+    severity: "Critical",
+    notes: "9 months, 1st dose",
+  },
+  {
+    age: 0.75,
+    gender: "M/F",
+    vaccine: "Yellow Fever",
+    disease: "Yellow Fever",
+    severity: "Critical",
+    notes: "In endemic areas",
+  },
+  {
+    age: 1,
+    gender: "M/F",
+    vaccine: "Varicella",
+    disease: "Chickenpox",
+    severity: "Moderate",
+    notes: "12–15 months, 1st dose",
+  },
+  {
+    age: 1,
+    gender: "M/F",
+    vaccine: "HepA",
+    disease: "Hepatitis A",
+    severity: "Moderate",
+    notes: "12–15 months, start 2-dose series",
+  },
+  {
+    age: 1.25,
+    gender: "M/F",
+    vaccine: "DTP/DTaP booster",
+    disease: "Diphtheria, Tetanus, Pertussis",
+    severity: "Critical",
+    notes: "15–18 months, Dose 4",
+  },
+  {
+    age: 1.25,
+    gender: "M/F",
+    vaccine: "Hib booster",
+    disease: "Haemophilus influenzae type b",
+    severity: "Critical",
+    notes: "15–18 months, final dose",
+  },
+  {
+    age: 1.25,
+    gender: "M/F",
+    vaccine: "PCV booster",
+    disease: "Pneumococcal disease",
+    severity: "Moderate",
+    notes: "15–18 months, final dose",
+  },
+  {
+    age: 5,
+    gender: "M/F",
+    vaccine: "DTP/DTaP booster",
+    disease: "Diphtheria, Tetanus, Pertussis",
+    severity: "Critical",
+    notes: "4–6 yrs, Dose 5",
+  },
+  {
+    age: 5,
+    gender: "M/F",
+    vaccine: "Polio booster",
+    disease: "Poliomyelitis",
+    severity: "Critical",
+    notes: "4–6 yrs, final dose",
+  },
+  {
+    age: 5,
+    gender: "M/F",
+    vaccine: "MMR booster",
+    disease: "Measles, Mumps, Rubella",
+    severity: "Critical",
+    notes: "4–6 yrs, Dose 2",
+  },
+  {
+    age: 5,
+    gender: "M/F",
+    vaccine: "Varicella booster",
+    disease: "Chickenpox",
+    severity: "Moderate",
+    notes: "4–6 yrs, Dose 2",
+  },
+  {
+    age: 11,
+    gender: "F",
+    vaccine: "HPV",
+    disease: "Human Papillomavirus",
+    severity: "Moderate",
+    notes: "Start 9–12 yrs, 2-dose series",
+  },
+  {
+    age: 11,
+    gender: "M",
+    vaccine: "HPV",
+    disease: "Human Papillomavirus",
+    severity: "Moderate",
+    notes: "Optional in boys, 2-dose series",
+  },
+  {
+    age: 11,
+    gender: "M/F",
+    vaccine: "Tdap booster",
+    disease: "Tetanus, Diphtheria, Pertussis",
+    severity: "Critical",
+    notes: "11–12 yrs booster",
+  },
+  {
+    age: 11,
+    gender: "M/F",
+    vaccine: "Meningococcal (MenACWY)",
+    disease: "Meningitis",
+    severity: "Critical",
+    notes: "11–12 yrs, Dose 1",
+  },
+  {
+    age: 16,
+    gender: "M/F",
+    vaccine: "Meningococcal booster",
+    disease: "Meningitis",
+    severity: "Critical",
+    notes: "16–18 yrs booster",
+  },
+  {
+    age: 18,
+    gender: "M/F",
+    vaccine: "Influenza",
+    disease: "Seasonal Flu",
+    severity: "Moderate",
+    notes: "Annual shot from 6 mo onwards",
+  },
+  {
+    age: 18,
+    gender: "M/F",
+    vaccine: "Catch-up vaccines",
+    disease: "Depends on missed doses",
+    severity: "Critical",
+    notes: "Ensure MMR, Varicella, HepB complete",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "Tdap booster",
+    disease: "Tetanus, Diphtheria, Pertussis",
+    severity: "Critical",
+    notes: "Every 10 years",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "Influenza",
+    disease: "Seasonal Flu",
+    severity: "Moderate",
+    notes: "Annual shot",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "HepB",
+    disease: "Hepatitis B",
+    severity: "Critical",
+    notes: "Complete if not done earlier",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "HepA",
+    disease: "Hepatitis A",
+    severity: "Moderate",
+    notes: "Risk groups, travelers",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "Varicella",
+    disease: "Chickenpox",
+    severity: "Moderate",
+    notes: "If not immune",
+  },
+  {
+    age: 25,
+    gender: "M/F",
+    vaccine: "MMR",
+    disease: "Measles, Mumps, Rubella",
+    severity: "Critical",
+    notes: "If not immune, ensure 2 doses",
+  },
+  {
+    age: 25,
+    gender: "F",
+    vaccine: "Tdap",
+    disease: "Pertussis (maternal)",
+    severity: "Critical",
+    notes: "Each pregnancy, 27–36 weeks",
+  },
+  {
+    age: 25,
+    gender: "F",
+    vaccine: "Influenza",
+    disease: "Seasonal Flu (maternal)",
+    severity: "Moderate",
+    notes: "Safe during pregnancy",
+  },
+  {
+    age: 30,
+    gender: "M/F",
+    vaccine: "Meningococcal",
+    disease: "Meningitis",
+    severity: "Moderate",
+    notes: "For risk groups/travel",
+  },
+  {
+    age: 30,
+    gender: "M/F",
+    vaccine: "Yellow Fever",
+    disease: "Yellow Fever",
+    severity: "Critical",
+    notes: "For travelers",
+  },
+  {
+    age: 30,
+    gender: "M/F",
+    vaccine: "Typhoid",
+    disease: "Typhoid fever",
+    severity: "Moderate",
+    notes: "For endemic travel",
+  },
+  {
+    age: 30,
+    gender: "M/F",
+    vaccine: "Pneumococcal (risk groups)",
+    disease: "Pneumococcal disease",
+    severity: "Moderate",
+    notes: "For asthma, diabetes, HIV",
+  },
+  {
+    age: 45,
+    gender: "M/F",
+    vaccine: "Tdap booster",
+    disease: "Tetanus, Diphtheria, Pertussis",
+    severity: "Critical",
+    notes: "Every 10 years",
+  },
+  {
+    age: 45,
+    gender: "M/F",
+    vaccine: "Influenza",
+    disease: "Seasonal Flu",
+    severity: "Moderate",
+    notes: "Annual shot, esp. with comorbidities",
+  },
+  {
+    age: 50,
+    gender: "M/F",
+    vaccine: "Shingles (Herpes Zoster)",
+    disease: "Shingles",
+    severity: "Critical",
+    notes: "From 50+, 2-dose recombinant vaccine",
+  },
+  {
+    age: 50,
+    gender: "M/F",
+    vaccine: "Pneumococcal (PCV15/20, PPSV23)",
+    disease: "Pneumococcal disease",
+    severity: "Critical",
+    notes: "From 50+ or earlier if high-risk",
+  },
+  {
+    age: 50,
+    gender: "M/F",
+    vaccine: "HepB",
+    disease: "Hepatitis B",
+    severity: "Critical",
+    notes: "If not yet done",
+  },
+  {
+    age: 50,
+    gender: "M/F",
+    vaccine: "MMR",
+    disease: "Measles, Mumps, Rubella",
+    severity: "Critical",
+    notes: "If not immune",
+  },
+  {
+    age: 50,
+    gender: "M/F",
+    vaccine: "Varicella",
+    disease: "Chickenpox",
+    severity: "Moderate",
+    notes: "If not immune",
+  },
+  {
+    age: 55,
+    gender: "M/F",
+    vaccine: "Meningococcal",
+    disease: "Meningitis",
+    severity: "Moderate",
+    notes: "Risk groups only",
+  },
+  {
+    age: 55,
+    gender: "M/F",
+    vaccine: "Yellow Fever",
+    disease: "Yellow Fever",
+    severity: "Critical",
+    notes: "Travel-related",
+  },
+  {
+    age: 55,
+    gender: "M/F",
+    vaccine: "Typhoid",
+    disease: "Typhoid fever",
+    severity: "Moderate",
+    notes: "Travel-related",
+  },
+  {
+    age: 55,
+    gender: "M/F",
+    vaccine: "Rabies",
+    disease: "Rabies",
+    severity: "Moderate",
+    notes: "Pre-exposure in risk professions",
+  },
+];
+
+function normalizeGender(value: string): Gender {
+  const gender = value.trim().toLowerCase();
+  if (gender === "m" || gender === "male") return "male";
+  if (gender === "f" || gender === "female") return "female";
+  if (gender === "m/f" || gender === "any") return "any";
+  return "any";
+}
+
+function normalizeSeverity(value: string): SeverityLevel {
+  const severity = value.trim().toLowerCase();
+  if (
+    severity === "critical" ||
+    severity === "moderate" ||
+    severity === "low"
+  ) {
+    return severity;
+  }
+  return "moderate";
+}
+
+export const vaccinationSchedule: VaccineRecommendation[] = rawSchedule.map(
+  (row, index) => ({
+    id: `vaccine-${index + 1}`,
+    age: row.age,
+    gender: normalizeGender(row.gender),
+    vaccine: row.vaccine,
+    disease: row.disease,
+    severity: normalizeSeverity(row.severity),
+    notes: row.notes,
+  }),
+);
+
+export function getEligibleVaccines(age: number, gender: Gender) {
+  return vaccinationSchedule.filter((entry) => {
+    return entry.gender === "any" || entry.gender === gender;
+  });
+}
