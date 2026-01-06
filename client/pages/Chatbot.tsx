@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { FloatingSidebar } from "@/components/FloatingSidebar";
+import ChatbotErrorBoundary from "@/components/ChatbotErrorBoundary";
 import { useSidebar } from "@/contexts/SidebarContext";
 import Vapi from "@vapi-ai/web";
 import {
@@ -145,6 +146,26 @@ const isRestrictedEnvironment = () => {
   return false;
 };
 
+// Detect language from text
+const detectLanguage = (text: string): "hindi" | "english" => {
+  // Hindi Unicode ranges
+  const hindiRegex = /[\u0900-\u097F]/g;
+  const matches = text.match(hindiRegex) || [];
+  const hindiPercentage = (matches.length / text.length) * 100;
+  
+  console.log(`📊 Language detection: Hindi ${hindiPercentage.toFixed(1)}%`);
+  return hindiPercentage > 30 ? "hindi" : "english";
+};
+
+// Get system prompt based on language
+const getSystemPrompt = (language: "hindi" | "english"): string => {
+  if (language === "hindi") {
+    return `आप एक सहायक AI असिस्टेंट हैं। आप हमेशा हिंदी में जवाब दें। आप विभिन्न कार्यों में सहायता कर सकते हैं जैसे अनुसंधान, विश्लेषण, लेखन, कोडिंग और प्रश्नों का उत्तर देना। हमेशा संक्षिप्त, उपयोगी और स्पष्ट जवाब दें। यदि उपयोगकर्ता अंग्रेजी में पूछे, तब भी हिंदी में जवाब दें।`;
+  } else {
+    return `You are a helpful AI assistant. Always respond in English. You can help with various tasks including research, analysis, writing, coding, and answering questions on a wide range of topics. Keep your responses concise and informative.`;
+  }
+};
+
 export default function Chatbot() {
   // Vapi instance state - moved inside component to fix hoisting
   const [vapiInstance, setVapiInstance] = useState<any>(null);
@@ -162,7 +183,7 @@ export default function Chatbot() {
     {
       id: "system-welcome",
       content:
-        "👋 Hello! I'm your AI assistant. I can help you with various tasks, answer questions, and have conversations. You can type your message below or use the voice assistant panel on the right to talk with me. How can I assist you today?",
+        "👋 नमस्ते! मैं आपका AI असिस्टेंट हूँ। मैं आपकी विभिन्न कार्यों में सहायता कर सकता हूँ, सवालों के जवाब दे सकता हूँ, और बातचीत कर सकता हूँ। आप नीचे अपना संदेश टाइप कर सकते हैं या दाईं ओर वॉयस असिस्टेंट पैनल का उपयोग करके मेरे साथ बात कर सकते हैं। मैं आपकी कैसे सहायता कर सकता हूँ?\n\n(Hello! I'm your AI assistant. I can help you with various tasks, answer questions, and have conversations. Type below or use the voice panel on the right.)",
       sender: "ai",
       timestamp: new Date(),
       status: "delivered",
@@ -191,6 +212,7 @@ export default function Chatbot() {
     "AI: I can help with research, analysis, writing, coding, and much more!",
   ]);
   const [audioVolume, setAudioVolume] = useState(2.5); // Volume control state - start at 250%
+  const [lastProcessedMessageId, setLastProcessedMessageId] = useState<string | null>(null);
 
   // Timer effect for call duration
   useEffect(() => {
@@ -411,7 +433,9 @@ export default function Chatbot() {
 
       // Start video when audio is received
       if (assistantVideoRef.current) {
-        assistantVideoRef.current.play();
+        assistantVideoRef.current.play().catch((error: Error) => {
+          addDebugLog(`⚠️ Could not play video: ${error.message}`);
+        });
       }
 
       addDebugLog(
@@ -486,20 +510,32 @@ export default function Chatbot() {
 
     vapiInstance.on("message", (message: any) => {
       try {
-        if (
-          message &&
-          typeof message === "object" &&
-          message.type === "transcript"
-        ) {
+        // Log RAW message for debugging
+        console.log("🔍 RAW Vapi message:", message);
+        console.log("🔍 Message type:", typeof message);
+        console.log("🔍 Message keys:", message ? Object.keys(message) : "null");
+        addDebugLog(`📊 Vapi message received - Type: ${typeof message}`);
+
+        // Validate message is an object
+        if (!message || typeof message !== "object") {
+          addDebugLog(`⚠️ Message is not an object: ${typeof message}`);
+          return;
+        }
+
+        addDebugLog(`📋 Message structure: ${JSON.stringify(Object.keys(message)).substring(0, 100)}`);
+
+        if (message.type === "transcript") {
           const transcript = message.transcript || "";
           const transcriptType = message.transcriptType || "unknown";
           const role = message.role || "unknown";
 
+          addDebugLog(
+            `📝 Transcript received - Role: ${role}, Type: ${transcriptType}, Content length: ${transcript?.length || 0}`,
+          );
+
           if (role === "user") {
-            addDebugLog(
-              `📝 User transcript: ${transcriptType} - ${transcript}`,
-            );
             if (transcriptType === "partial") {
+              addDebugLog(`📝 Partial user input: ${transcript.substring(0, 50)}...`);
               setInputValue(transcript);
             } else if (transcriptType === "final") {
               addDebugLog(`✅ Final user transcript: ${transcript}`);
@@ -508,34 +544,84 @@ export default function Chatbot() {
               setTranscript((prev) => [...prev, `User: ${transcript}`]);
             }
           } else if (role === "assistant") {
-            addDebugLog(`🤖 AI response: ${transcript}`);
+            if (!transcript || transcript.trim().length === 0) {
+              addDebugLog(`⚠️ AI response is empty, skipping`);
+              return;
+            }
 
-            // Trigger voice activity when assistant speaks
-            setHasAudioOutput(true);
-            // Keep the audio output flag active for a short time to show visual feedback
-            setTimeout(() => {
-              setHasAudioOutput(false);
-            }, 3000);
+            // Create message ID for deduplication
+            const messageId = Date.now().toString();
+            
+            // Check for duplicate messages
+            if (messageId === lastProcessedMessageId) {
+              addDebugLog(`⚠️ Duplicate message detected, skipping`);
+              return;
+            }
+            
+            setLastProcessedMessageId(messageId);
 
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now().toString(),
-                content: transcript,
+            try {
+              // Trigger voice activity when assistant speaks
+              setHasAudioOutput(true);
+              // Keep the audio output flag active for a short time to show visual feedback
+              setTimeout(() => {
+                setHasAudioOutput(false);
+              }, 3000);
+
+              const newMessage = {
+                id: messageId, // Use the deduplication ID
+                content: String(transcript), // Ensure it's a string
                 sender: "ai" as const,
                 timestamp: new Date(),
                 status: "read" as const,
-              },
-            ]);
-            setTranscript((prev) => [...prev, `AI: ${transcript}`]);
+              };
+
+              addDebugLog(`📤 Adding message to state: ID=${newMessage.id}`);
+              console.log("Message object:", newMessage);
+
+              setMessages((prev) => {
+                try {
+                  const updated = [...prev, newMessage];
+                  addDebugLog(`✅ Message added to state, total: ${updated.length}`);
+                  return updated;
+                } catch (stateError) {
+                  addDebugLog(`❌ Error updating messages state: ${stateError}`);
+                  console.error("State update error:", stateError);
+                  return prev; // Return previous state on error
+                }
+              });
+
+              setTranscript((prev) => [...prev, `AI: ${transcript}`]);
+            } catch (processError) {
+              addDebugLog(`❌ Error processing AI response: ${processError}`);
+              console.error("Processing error:", processError);
+            }
+          } else {
+            addDebugLog(`⚠️ Unknown role: ${role}`);
           }
+        } else if (message.type === "function-call") {
+          addDebugLog(`📞 Vapi function call: ${message.functionName}`);
+        } else if (message.type === "hang-up") {
+          addDebugLog(`📵 Vapi hang-up received`);
         } else {
-          // Handle non-transcript messages
-          addDebugLog(`📨 Vapi message: ${JSON.stringify(message, null, 2)}`);
+          // Handle other message types
+          addDebugLog(`📨 Other Vapi message type: ${message.type || "unknown"}`);
+          try {
+            const msgStr = JSON.stringify(message, null, 2);
+            if (msgStr.length < 200) {
+              addDebugLog(`📨 Full message: ${msgStr}`);
+            } else {
+              addDebugLog(`📨 Message (truncated): ${msgStr.substring(0, 200)}...`);
+            }
+          } catch (e) {
+            addDebugLog(`📨 Could not stringify message`);
+          }
         }
       } catch (error) {
-        addDebugLog(`❌ Error handling Vapi message: ${error}`);
-        console.error("Error processing Vapi message:", error, message);
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        addDebugLog(`❌ CRITICAL: Error in message handler: ${errorMsg}`);
+        console.error("CRITICAL ERROR in message handler:", error, message);
+        // Don't re-throw - we want to keep the page alive
       }
     });
 
@@ -555,7 +641,11 @@ export default function Chatbot() {
       setCallStartTime(null);
       // Pause video when call ends
       if (assistantVideoRef.current) {
-        assistantVideoRef.current.pause();
+        try {
+          assistantVideoRef.current.pause();
+        } catch (error) {
+          addDebugLog(`⚠️ Could not pause video: ${error}`);
+        }
       }
 
       // Cleanup Web Audio API resources
@@ -708,33 +798,64 @@ export default function Chatbot() {
     setInputValue("");
     setIsTyping(true);
 
-    // Simulate AI response
+    // Detect language from user message
+    const userLanguage = detectLanguage(content);
+
+    // Simulate AI response with language-aware responses
     setTimeout(
       () => {
-        const aiResponses = [
-          "I understand your request. Let me process this information and provide you with helpful insights.",
-          "Based on your question, I can help you find the information you need. Would you like me to provide a detailed explanation or a quick overview?",
-          "Great question! Let me break this down for you and provide clear, actionable insights.",
-          "I can definitely assist with that. Let me analyze your request and provide you with relevant information.",
-          "Perfect! I'm here to help. Would you like me to provide examples, explanations, or specific guidance?",
-        ];
+            // Determine if it's a health/medical question
+            const healthKeywordsHindi = ['दवा', 'दर्द', 'बुखार', 'सर्दी', 'खांसी', 'सेहत', 'स्वास्थ्य', 'बीमार', 'इलाज', 'डॉक्टर', 'दवाई', 'दाइयां', 'स्वास्थ्य'];
+            const healthKeywordsEnglish = ['medicine', 'pain', 'fever', 'cold', 'cough', 'health', 'doctor', 'medicine', 'tablet', 'pill', 'sick', 'illness', 'treatment', 'symptom', 'disease', 'health'];
+            
+            const contentLower = content.toLowerCase();
+            const isHealthQuestion = userLanguage === "hindi" 
+              ? healthKeywordsHindi.some(kw => content.includes(kw))
+              : healthKeywordsEnglish.some(kw => contentLower.includes(kw));
 
-        const randomResponse =
-          aiResponses[Math.floor(Math.random() * aiResponses.length)];
+            let randomResponse;
+            
+            if (isHealthQuestion) {
+              // Health-specific responses
+              randomResponse = userLanguage === "hindi"
+                ? [
+                    "यह एक महत्वपूर्ण स्वास्थ्य सवाल है। अगर आप किसी गंभीर समस्या का सामना कर रहे हैं, तो कृपया किसी योग्य चिकित्सक से परामर्श लें। मैं सामान्य जानकारी प्रदान कर सकता हूं लेकिन व्यक्तिगत चिकित्सा सलाह नहीं दे सकता।",
+                    "स्वास्थ्य संबंधी समस्याओं के लिए पेशेवर चिकित्सा सहायता लेना महत्वपूर्ण है। आप अपने लक्षणों के बारे में और जानकारी दे सकते हैं ताकि मैं सामान्य मार्गदर्शन प्रदान कर सकूं।",
+                    "आपकी स्वास्थ्य संबंधी चिंता को समझता हूं। कृपया एक योग्य डॉक्टर से परामर्श लें जो आपको सही निदान और उपचार प्रदान कर सकता है।",
+                    "यह स्वास्थ्य संबंधी मामला है। अधिक विवरण साझा करें ताकि मैं बेहतर सहायता कर सकूं, लेकिन याद रखें कि पेशेवर चिकित्सा सलाह लेना जरूरी है।",
+                  ]
+                : [
+                    "This is an important health question. If you're experiencing serious symptoms, please consult a qualified healthcare professional immediately. I can provide general information, but cannot replace medical advice.",
+                    "For health-related concerns, it's crucial to seek professional medical help. You can share more details about your symptoms so I can provide general guidance.",
+                    "I understand your health concern. Please consult a qualified doctor who can provide proper diagnosis and treatment.",
+                    "This is a health-related matter. Please share more details about your symptoms, but remember to seek professional medical advice.",
+                  ];
+            } else {
+              // Generic responses
+              randomResponse = userLanguage === "hindi"
+                ? [
+                    "मैं आपके अनुरोध को समझता हूं। इस जानकारी को संसाधित करूंगा और आपको उपयोगी जानकारी प्रदान करूंगा।",
+                    "आपके सवाल के आधार पर, मैं आपको आवश्यक जानकारी खोजने में मदद कर सकता हूं। क्या आप विस्तृत व्याख्या या संक्षिप्त सारांश चाहते हैं?",
+                    "बहुत अच्छा सवाल! मैं इसे विस्तार से समझाता हूं और स्पष्ट जानकारी प्रदान करता हूं।",
+                    "मैं आपकी निश्चित रूप से मदद कर सकता हूं। आपके सवाल को समझता हूं और सही जवाब दूंगा।",
+                  ]
+                : [
+                    "I understand your request. Let me process this information and provide helpful insights.",
+                    "Based on your question, I can help you find the information you need. Would you like a detailed explanation or quick summary?",
+                    "Great question! Let me provide clear, actionable insights.",
+                    "I can definitely help with that. Let me analyze your request and provide relevant information.",
+                  ];
+            }
 
-        const aiMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          content: randomResponse,
-          sender: "ai",
-          timestamp: new Date(),
-          status: "read",
-          suggestions: [
-            "Tell me more about this",
-            "Show me examples",
-            "Export results",
-            "Explain methodology",
-          ],
-        };
+            const response = randomResponse[Math.floor(Math.random() * randomResponse.length)];
+
+            const aiMessage: Message = {
+              id: (Date.now() + 1).toString(),
+              content: response,
+              sender: "ai" as const,
+              timestamp: new Date(),
+              status: "read" as const,
+            };
 
         setMessages((prev) =>
           prev
@@ -866,6 +987,15 @@ export default function Chatbot() {
 
         // Configure the assistant for the call
         const voiceId = import.meta.env.VITE_VAPI_VOICE_ID || "rachel";
+        
+        // Detect language from recent user messages
+        const recentUserMessages = messages
+          .filter(m => m.sender === "user")
+          .slice(-3)
+          .map(m => m.content)
+          .join(" ");
+        const detectedLanguage = detectLanguage(recentUserMessages || inputValue);
+        console.log(`🌍 Detected language: ${detectedLanguage}`);
 
         let callConfig;
 
@@ -874,8 +1004,10 @@ export default function Chatbot() {
           addDebugLog(`Using pre-created assistant: ${assistantId}`);
           callConfig = assistantId; // For Web SDK, just pass the assistant ID
         } else {
-          // Create assistant configuration dynamically
-          addDebugLog("Creating dynamic assistant configuration");
+          // Create assistant configuration dynamically with language support
+          addDebugLog(`Creating dynamic assistant configuration (Language: ${detectedLanguage})`);
+          const systemPrompt = getSystemPrompt(detectedLanguage);
+          
           callConfig = {
             model: {
               provider: "openai",
@@ -883,8 +1015,7 @@ export default function Chatbot() {
               messages: [
                 {
                   role: "system",
-                  content:
-                    "You are a helpful AI assistant. Keep your responses concise and informative. You can help with various tasks including research, writing, coding, analysis, and answering questions on a wide range of topics.",
+                  content: systemPrompt,
                 },
               ],
             },
@@ -940,7 +1071,8 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <ChatbotErrorBoundary>
+      <div className="dashboard-page min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <FloatingSidebar
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
@@ -979,7 +1111,16 @@ export default function Chatbot() {
                 }}
               >
                 <AnimatePresence initial={false}>
-                  {messages.map((message, index) => (
+                  {messages && messages.length > 0 ? (
+                    messages.map((message, index) => {
+                      try {
+                        // Validate message object
+                        if (!message || !message.id || !message.content) {
+                          console.error("Invalid message object:", message);
+                          return null;
+                        }
+
+                        return (
                     <motion.div
                       key={message.id}
                       initial={{ opacity: 0, y: 20, scale: 0.95 }}
@@ -1037,39 +1178,20 @@ export default function Chatbot() {
                           </div>
                         </div>
 
-                        {/* AI Suggestions */}
-                        {message.sender === "ai" && message.suggestions && (
-                          <motion.div
-                            className="mt-3 flex flex-wrap gap-2"
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.5 }}
-                          >
-                            {message.suggestions.map(
-                              (suggestion, suggestionIndex) => (
-                                <motion.button
-                                  key={suggestionIndex}
-                                  onClick={() =>
-                                    handleSuggestionClick(suggestion)
-                                  }
-                                  className="px-3 py-1.5 text-xs bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 rounded-full hover:from-purple-200 hover:to-pink-200 transition-all duration-200 border border-purple-200/50 dashboard-text"
-                                  initial={{ opacity: 0, scale: 0.8 }}
-                                  animate={{ opacity: 1, scale: 1 }}
-                                  transition={{
-                                    delay: 0.6 + suggestionIndex * 0.1,
-                                  }}
-                                  whileHover={{ scale: 1.05 }}
-                                  whileTap={{ scale: 0.95 }}
-                                >
-                                  {suggestion}
-                                </motion.button>
-                              ),
-                            )}
-                          </motion.div>
-                        )}
+                        {/* AI Suggestions - REMOVED */}
                       </div>
                     </motion.div>
-                  ))}
+                        );
+                      } catch (renderError) {
+                        console.error("Error rendering message:", renderError, message);
+                        return null;
+                      }
+                    })
+                  ) : (
+                    <div className="text-center text-gray-400 py-8">
+                      <p>No messages yet. Start a conversation!</p>
+                    </div>
+                  )}
                 </AnimatePresence>
 
                 {/* Typing Indicator */}
@@ -1258,22 +1380,23 @@ export default function Chatbot() {
                   </motion.div>
                 )}
 
-                {/* Debug Logs */}
-                {/* {debugLogs.length > 0 && (
+                {/* Debug Logs - ENABLED FOR TROUBLESHOOTING */}
+                {debugLogs.length > 0 && (
                   <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg max-h-32 overflow-y-auto"
+                    className="mt-3 p-3 bg-gray-50 border border-gray-200 rounded-lg max-h-40 overflow-y-auto"
                   >
                     <div className="text-xs text-gray-600 space-y-1 dashboard-text">
-                      {debugLogs.slice(-5).map((log, index) => (
-                        <div key={index} className="font-mono">
+                      <div className="font-bold text-gray-700 mb-2">Recent Logs:</div>
+                      {debugLogs.slice(-10).map((log, index) => (
+                        <div key={index} className="font-mono text-gray-700">
                           {log}
                         </div>
                       ))}
                     </div>
                   </motion.div>
-                )} */}
+                )}
               </div>
             </div>
           </motion.div>
@@ -1281,6 +1404,7 @@ export default function Chatbot() {
 
         {/* Hidden video element for Vapi */}
         <video ref={videoRef} className="hidden" autoPlay muted playsInline />
+        <video ref={assistantVideoRef} className="hidden" autoPlay muted playsInline />
       </motion.div>
 
       {/* Right Panel - Voice Assistant */}
@@ -1479,5 +1603,6 @@ export default function Chatbot() {
         </div>
       </motion.div>
     </div>
+    </ChatbotErrorBoundary>
   );
 }

@@ -57,6 +57,7 @@ QUICK_REFERENCE.md
 CODEBASE_ANALYSIS.md
 README_ANALYSIS.md
 START_HERE.md
+HINDI_LANGUAGE_SUPPORT.md
 
 # Large binary files
 *.exe
@@ -75,3 +76,6 @@ medvit-api/
 
 # Note: Large files are now tracked with Git LFS
 # *.bundle, *.zip, *.pth files are tracked with LFS
+
+# Landing pages (separate from main project)
+landing-pages/
