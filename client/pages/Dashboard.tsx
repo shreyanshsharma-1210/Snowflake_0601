@@ -84,7 +84,7 @@ export default function Dashboard() {
                 className="text-4xl md:text-5xl font-extrabold text-gray-900 dashboard-title tracking-tight"
                 style={{ fontFamily: "Poppins, sans-serif", lineHeight: 1.02 }}
               >
-                <span className="block bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">HealthSaarthi</span>
+                <span className="block bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent">ArogyaSaarthi</span>
               </h1>
               <p
                 className="text-gray-600 mt-2 text-lg max-w-2xl leading-relaxed dashboard-text"

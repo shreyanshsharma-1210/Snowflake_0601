@@ -513,29 +513,33 @@ export default function GovernmentYojana() {
                 </CardHeader>
 
                 <CardContent className="space-y-4">
-                  {/* Benefits */}
-                  <div>
-                    <h4 className="font-semibold text-gray-800 mb-2">
-                      {language === 'en' ? '✨ Key Benefits:' : '✨ मुख्य लाभ:'}
-                    </h4>
-                    <ul className="space-y-1">
-                      {(language === 'en' ? scheme.benefitsEn : scheme.benefitsHi).map((benefit, idx) => (
-                        <li key={idx} className="text-sm text-gray-600 flex items-start gap-2">
-                          <span className="text-green-500 mt-1">•</span>
-                          <span>{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Benefits */}
+                    <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
+                      <h4 className="font-semibold text-orange-800 mb-2 flex items-center gap-2">
+                        <span>✨</span>
+                        {language === 'en' ? 'Key Benefits' : 'मुख्य लाभ'}
+                      </h4>
+                      <ul className="space-y-2">
+                        {(language === 'en' ? scheme.benefitsEn : scheme.benefitsHi).map((benefit, idx) => (
+                          <li key={idx} className="text-sm text-gray-700 flex items-start gap-2">
+                            <span className="text-orange-500 mt-0.5">•</span>
+                            <span>{benefit}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
 
-                  {/* Eligibility */}
-                  <div className="bg-gray-50 p-3 rounded-lg">
-                    <h5 className="font-medium text-gray-800 mb-1">
-                      {language === 'en' ? '👥 Eligibility:' : '👥 पात्रता:'}
-                    </h5>
-                    <p className="text-sm text-gray-600">
-                      {language === 'en' ? scheme.eligibility : (scheme.eligibilityHi || scheme.eligibility)}
-                    </p>
+                    {/* Eligibility */}
+                    <div className="bg-blue-50 p-4 rounded-xl border border-blue-100 h-full">
+                      <h5 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                        <span>👥</span>
+                        {language === 'en' ? 'Eligibility Criteria' : 'पात्रता मानदंड'}
+                      </h5>
+                      <div className="text-sm text-gray-700">
+                        {language === 'en' ? scheme.eligibility : (scheme.eligibilityHi || scheme.eligibility)}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Action Buttons */}
