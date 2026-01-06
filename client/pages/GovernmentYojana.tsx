@@ -8,6 +8,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GovernmentHospitalMap } from "@/components/GovernmentHospitalMap";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Scheme {
   id: string;
@@ -19,10 +27,16 @@ interface Scheme {
   benefitsEn: string[];
   benefitsHi: string[];
   eligibility: string;
+  eligibilityHi?: string;
   website?: string;
   helpline?: string;
   coverage: string;
+  stepsEn: string[];
+  stepsHi: string[];
+  documentsEn?: string[];
+  documentsHi?: string[];
 }
+
 
 const schemes: Scheme[] = [
   {
@@ -47,9 +61,26 @@ const schemes: Scheme[] = [
       "देशभर के Empanelled Hospitals में इलाज मिल सकता है"
     ],
     eligibility: "Socio-Economic Caste Census (SECC) eligible families",
+    eligibilityHi: "सामाजिक-आर्थिक जाति जनगणना (SECC) पात्र परिवार",
     website: "https://nha.gov.in/PM-JAY",
     helpline: "14555",
-    coverage: "Implemented in almost all states"
+    coverage: "Implemented in almost all states",
+    stepsEn: [
+      "Check your name in the beneficiary list at pmjay.gov.in or call 14555.",
+      "If eligible, visit any Empanelled Health Care Provider (EHCP).",
+      "Show your Aadhaar Card or Ration Card to the Pradhan Mantri Arogya Mitra (PMAM) to verify identity.",
+      "Get your Ayushman Card generated at the hospital or CSC center.",
+      "Avail cashless treatment for listed procedures."
+    ],
+    stepsHi: [
+      "pmjay.gov.in पर या 14555 पर कॉल करके लाभार्थी सूची में अपना नाम जांचें।",
+      "यदि पात्र हैं, तो किसी भी सूचीबद्ध अस्पताल (EHCP) में जाएं।",
+      "पहचान सत्यापित करने के लिए प्रधान मंत्री आरोग्य मित्र (PMAM) को अपना आधार कार्ड या राशन कार्ड दिखाएं।",
+      "अस्पताल या CSC केंद्र पर अपना आयुष्मान कार्ड बनवाएं।",
+      "सूचीबद्ध प्रक्रियाओं के लिए कैशलेस इलाज का लाभ उठाएं।"
+    ],
+    documentsEn: ["Aadhaar Card", "Ration Card", "Mobile Number", "SECC Name Details"],
+    documentsHi: ["आधार कार्ड", "राशन कार्ड", "मोबाइल नंबर", "SECC नाम विवरण"]
   },
   {
     id: "rsby",
@@ -69,7 +100,24 @@ const schemes: Scheme[] = [
       "पंजीकृत अस्पतालों में भर्ती खर्च कवर"
     ],
     eligibility: "Below Poverty Line (BPL) families",
-    coverage: "Earlier widely implemented, now merged with PM-JAY in many states"
+    eligibilityHi: "गरीबी रेखा से नीचे (BPL) परिवार",
+    coverage: "Earlier widely implemented, now merged with PM-JAY in many states",
+    stepsEn: [
+      "Check BPL status with local designated authority or Panchayat.",
+      "Visit the enrollment camp organized in your village/area.",
+      "Pay ₹30 registration fee for the Smart Card.",
+      "Provide biometric details (fingerprints/photo) at the camp.",
+      "Receive Smart Card on the spot to avail benefits."
+    ],
+    stepsHi: [
+      "स्थानीय प्राधिकरण या पंचायत के साथ बीपीएल स्थिति की जांच करें।",
+      "अपने गांव/क्षेत्र में आयोजित नामांकन शिविर में जाएं।",
+      "स्मार्ट कार्ड के लिए ₹30 पंजीकरण शुल्क का भुगतान करें।",
+      "शिविर में बायोमेट्रिक विवरण (उंगलियों के निशान/फोटो) प्रदान करें।",
+      "लाभ उठाने के लिए मौके पर ही स्मार्ट कार्ड प्राप्त करें।"
+    ],
+    documentsEn: ["BPL Card / Certificate", "Aadhaar Card"],
+    documentsHi: ["बीपीएल कार्ड / प्रमाण पत्र", "आधार कार्ड"]
   },
   {
     id: "nmhp",
@@ -89,8 +137,23 @@ const schemes: Scheme[] = [
       "अवसाद, चिंता, नशा, मनोविकार जैसी समस्याओं के लिए"
     ],
     eligibility: "All citizens",
+    eligibilityHi: "सभी नागरिक",
     helpline: "14416",
-    coverage: "Nationwide, implemented via states and districts"
+    coverage: "Nationwide, implemented via states and districts",
+    stepsEn: [
+      "Call the toll-free number 14416 or 1-800-891-4416.",
+      "Select your preferred language from the options.",
+      "Speak to a trained counselor directly about your concerns.",
+      "For medical treatment, visit the nearest District Hospital's DMHP wing."
+    ],
+    stepsHi: [
+      "टोल-फ्री नंबर 14416 या 1-800-891-4416 पर कॉल करें।",
+      "विकल्पों में से अपनी पसंदीदा भाषा चुनें।",
+      "अपनी चिंताओं के बारे में सीधे प्रशिक्षित परामर्शदाता से बात करें।",
+      "चिकित्सा उपचार के लिए, नजदीकी जिला अस्पताल के DMHP विंग में जाएं।"
+    ],
+    documentsEn: ["No documents required for Tele-MANAS helpline."],
+    documentsHi: ["टेली-मानस हेल्पलाइन के लिए किसी दस्तावेज की आवश्यकता नहीं है।"]
   },
   {
     id: "manodarpan",
@@ -108,8 +171,23 @@ const schemes: Scheme[] = [
       "जागरूकता कार्यक्रम और वर्कशॉप"
     ],
     eligibility: "Students, Parents, Teachers",
+    eligibilityHi: "छात्र, माता-पिता, शिक्षक",
     website: "https://manodarpan.education.gov.in",
-    coverage: "Pan-India (schools, colleges, online portal)"
+    coverage: "Pan-India (schools, colleges, online portal)",
+    stepsEn: [
+      "Visit the official website manodarpan.education.gov.in.",
+      "Browse available resources, tips, and guidelines.",
+      "Call the National Helpline 8448440632 for psychosocial support.",
+      "Attend listed webinars and counseling sessions."
+    ],
+    stepsHi: [
+      "आधिकारिक वेबसाइट manodarpan.education.gov.in पर जाएं।",
+      "उपलब्ध संसाधनों, सुझावों और दिशानिर्देशों को ब्राउज़ करें।",
+      "मनोसामाजिक सहायता के लिए राष्ट्रीय हेल्पलाइन 8448440632 पर कॉल करें।",
+      "सूचीबद्ध वेबिनार और परामर्श सत्रों में भाग लें।"
+    ],
+    documentsEn: ["Student ID (if accessing specific institutional support)"],
+    documentsHi: ["छात्र आईडी (यदि विशिष्ट संस्थागत सहायता प्राप्त कर रहे हैं)"]
   },
   {
     id: "eraktkosh",
@@ -129,8 +207,23 @@ const schemes: Scheme[] = [
       "रक्त स्टॉक की पारदर्शी जानकारी"
     ],
     eligibility: "All citizens",
+    eligibilityHi: "सभी नागरिक",
     website: "https://eraktkosh.mohfw.gov.in/",
-    coverage: "Available in most states with govt/private blood banks"
+    coverage: "Available in most states with govt/private blood banks",
+    stepsEn: [
+      "Visit eraktkosh.mohfw.gov.in or download the e-RaktKosh app.",
+      "To find blood: Click on 'Stock Availability', select State/District and Blood Group.",
+      "To donate: Click on 'Donor Registration' and fill your details.",
+      "Visit the selected blood bank at the scheduled time."
+    ],
+    stepsHi: [
+      "eraktkosh.mohfw.gov.in पर जाएं या ई-रक्तकोश ऐप डाउनलोड करें।",
+      "रक्त खोजने के लिए: 'Stock Availability' पर क्लिक करें, राज्य/ज़िला और रक्त समूह चुनें।",
+      "दान करने के लिए: 'Donor Registration' पर क्लिक करें और अपना विवरण भरें।",
+      "निर्धारित समय पर चयनित रक्त बैंक पर जाएं।"
+    ],
+    documentsEn: ["Photo ID", "Donor Card (if any)"],
+    documentsHi: ["फोटो आईडी", "दानकर्ता कार्ड (यदि कोई हो)"]
   },
   {
     id: "pmbjp",
@@ -150,16 +243,31 @@ const schemes: Scheme[] = [
       "जेब से होने वाला खर्च कम"
     ],
     eligibility: "All citizens",
+    eligibilityHi: "सभी नागरिक",
     website: "https://janaushadhi.gov.in/",
-    coverage: "All states, with dedicated Janaushadhi Kendras"
+    coverage: "All states, with dedicated Janaushadhi Kendras",
+    stepsEn: [
+      "Locate the nearest Janaushadhi Kendra using the website or 'Jan Aushadhi Sugam' app.",
+      "Visit the store with your valid doctor's prescription.",
+      "Ask the pharmacist for generic equivalents of your prescribed medicines.",
+      "Purchase quality medicines at a fraction of the market cost."
+    ],
+    stepsHi: [
+      "वेबसाइट या 'जन औषधि सुगम' ऐप का उपयोग करके निकटतम जनऔषधि केंद्र खोजें।",
+      "अपने डॉक्टर की वैध पर्ची के साथ स्टोर पर जाएं।",
+      "फार्मासिस्ट से अपनी निर्धारित दवाओं के जेनेरिक समकक्षों के लिए पूछें।",
+      "बाजार की कीमत के एक अंश पर गुणवत्ता वाली दवाएं खरीदें।"
+    ],
+    documentsEn: ["Doctor's Prescription"],
+    documentsHi: ["डॉक्टर की पर्ची"]
   }
 ];
 
 const states = [
-  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+  "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+  "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
   "Uttarakhand", "West Bengal", "Delhi", "Jammu and Kashmir", "Ladakh"
 ];
 
@@ -175,7 +283,7 @@ export default function GovernmentYojana() {
 
   return (
     <div className="dashboard-page min-h-screen bg-gradient-to-br from-blue-50 to-green-50">
-      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => {}} />
+      <FloatingSidebar isCollapsed={isCollapsed} setIsCollapsed={() => { }} />
       <FloatingTopBar isCollapsed={isCollapsed} />
 
       <motion.div className={`transition-all duration-300 ${isCollapsed ? "ml-20" : "ml-72"} pt-28 p-6`}>
@@ -189,7 +297,7 @@ export default function GovernmentYojana() {
               {language === 'en' ? '🏛️ Government Health Schemes' : '🏛️ सरकारी स्वास्थ्य योजनाएं'}
             </h1>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              {language === 'en' 
+              {language === 'en'
                 ? 'Comprehensive information about government healthcare schemes and benefits available across India'
                 : 'भारत भर में उपलब्ध सरकारी स्वास्थ्य योजनाओं और लाभों की विस्तृत जानकारी'
               }
@@ -198,7 +306,7 @@ export default function GovernmentYojana() {
         </header>
 
         {/* Controls */}
-        <motion.div 
+        <motion.div
           className="mb-8 bg-white rounded-2xl p-6 shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -251,29 +359,29 @@ export default function GovernmentYojana() {
 
             {/* Quick Actions */}
             <div className="flex flex-wrap gap-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => window.open('https://hospitals.pmjay.gov.in/', '_blank')}
               >
                 {language === 'en' ? '🏥 Find PM-JAY Hospitals' : '🏥 पीएम-जेएवाई अस्पताल खोजें'}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                onClick={() => window.open('https://eraktkosh.mohfw.gov.in/BLDAHIMS/bloodbank/nearbyBB.cnt', '_blank')}
+                onClick={() => window.open('https://eraktkosh.mohfw.gov.in/BLDAHIMS/bloodbank/stockAvailability.cnt', '_blank')}
               >
                 {language === 'en' ? '🩸 Find Blood Banks' : '🩸 रक्त बैंक खोजें'}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
-                onClick={() => window.open('https://janaushadhi.gov.in/KendraDetails.aspx', '_blank')}
+                onClick={() => window.open('https://janaushadhi.gov.in/near-by-kendra', '_blank')}
               >
                 {language === 'en' ? '💊 Find Janaushadhi Stores' : '💊 जनऔषधि स्टोर खोजें'}
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => window.open('tel:14416')}
               >
@@ -285,7 +393,7 @@ export default function GovernmentYojana() {
           {selectedState && selectedState !== "all-states" && (
             <div className="mt-4 p-3 bg-blue-50 rounded-lg">
               <p className="text-sm text-blue-800">
-                {language === 'en' 
+                {language === 'en'
                   ? `Showing schemes available in ${selectedState}`
                   : `${selectedState} में उपलब्ध योजनाएं दिखाई जा रही हैं`
                 }
@@ -295,7 +403,7 @@ export default function GovernmentYojana() {
         </motion.div>
 
         {/* Interactive Service Locator Map */}
-        <motion.div 
+        <motion.div
           className="mb-8 bg-white rounded-2xl p-6 shadow-lg"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -304,10 +412,10 @@ export default function GovernmentYojana() {
           <h3 className="text-xl font-bold text-gray-800 mb-4">
             🗺️ {language === 'en' ? 'Interactive Service Locator' : 'इंटरैक्टिव सेवा लोकेटर'}
           </h3>
-          
+
           {/* Interactive Leaflet Map */}
-          <GovernmentHospitalMap 
-            language={language} 
+          <GovernmentHospitalMap
+            language={language}
             selectedState={selectedState !== "all-states" ? selectedState : undefined}
           />
 
@@ -316,10 +424,10 @@ export default function GovernmentYojana() {
             <h4 className="font-semibold text-gray-800 mb-4">
               {language === 'en' ? '🎯 Quick Service Finder' : '🎯 त्वरित सेवा खोजकर्ता'}
             </h4>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="justify-start h-auto p-4"
                 onClick={() => window.open('https://hospitals.pmjay.gov.in/', '_blank')}
               >
@@ -331,10 +439,10 @@ export default function GovernmentYojana() {
                 </div>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="justify-start h-auto p-4"
-                onClick={() => window.open('https://eraktkosh.mohfw.gov.in/BLDAHIMS/bloodbank/nearbyBB.cnt', '_blank')}
+                onClick={() => window.open('https://eraktkosh.mohfw.gov.in/BLDAHIMS/bloodbank/stockAvailability.cnt', '_blank')}
               >
                 <div className="text-left">
                   <div className="font-semibold">🩸 {language === 'en' ? 'Blood Banks' : 'रक्त बैंक'}</div>
@@ -344,10 +452,10 @@ export default function GovernmentYojana() {
                 </div>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="justify-start h-auto p-4"
-                onClick={() => window.open('https://janaushadhi.gov.in/KendraDetails.aspx', '_blank')}
+                onClick={() => window.open('https://janaushadhi.gov.in/near-by-kendra', '_blank')}
               >
                 <div className="text-left">
                   <div className="font-semibold">💊 {language === 'en' ? 'Janaushadhi Stores' : 'जनऔषधि स्टोर'}</div>
@@ -357,8 +465,8 @@ export default function GovernmentYojana() {
                 </div>
               </Button>
 
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="justify-start h-auto p-4"
                 onClick={() => window.open('https://telemanas.mohfw.gov.in/', '_blank')}
               >
@@ -397,7 +505,7 @@ export default function GovernmentYojana() {
                       </div>
                     </div>
                     <Badge variant="secondary" className="text-xs">
-                      {scheme.coverage.includes('All states') || scheme.coverage.includes('Nationwide') 
+                      {scheme.coverage.includes('All states') || scheme.coverage.includes('Nationwide')
                         ? (language === 'en' ? 'Pan-India' : 'पूरे भारत में')
                         : (language === 'en' ? 'State-wise' : 'राज्य-वार')
                       }
@@ -426,14 +534,16 @@ export default function GovernmentYojana() {
                     <h5 className="font-medium text-gray-800 mb-1">
                       {language === 'en' ? '👥 Eligibility:' : '👥 पात्रता:'}
                     </h5>
-                    <p className="text-sm text-gray-600">{scheme.eligibility}</p>
+                    <p className="text-sm text-gray-600">
+                      {language === 'en' ? scheme.eligibility : (scheme.eligibilityHi || scheme.eligibility)}
+                    </p>
                   </div>
 
                   {/* Action Buttons */}
                   <div className="flex flex-wrap gap-2 pt-2">
                     {scheme.website && (
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         className="bg-blue-600 hover:bg-blue-700"
                         onClick={() => window.open(scheme.website, '_blank')}
                       >
@@ -441,17 +551,88 @@ export default function GovernmentYojana() {
                       </Button>
                     )}
                     {scheme.helpline && (
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => window.open(`tel:${scheme.helpline}`)}
                       >
                         📞 {scheme.helpline}
                       </Button>
                     )}
-                    <Button size="sm" variant="outline">
-                      📋 {language === 'en' ? 'Apply Now' : 'अभी आवेदन करें'}
-                    </Button>
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          className="bg-red-600 hover:bg-red-700 text-white font-bold"
+                        >
+                          {language === 'en' ? 'How to Apply' : 'आवेदन कैसे करें'}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle className="text-xl font-bold flex items-center gap-2">
+                            {scheme.icon}
+                            {language === 'en'
+                              ? `How to Apply for ${scheme.nameEn}`
+                              : `${scheme.nameHi} के लिए आवेदन कैसे करें`
+                            }
+                          </DialogTitle>
+                          <DialogDescription>
+                            {language === 'en'
+                              ? "Follow these steps to avail the benefits of the scheme."
+                              : "योजना का लाभ उठाने के लिए इन चरणों का पालन करें।"
+                            }
+                          </DialogDescription>
+                        </DialogHeader>
+
+                        <div className="space-y-6 mt-4">
+                          {/* Application Steps */}
+                          <div>
+                            <h4 className="font-semibold text-lg text-gray-800 mb-2 border-b pb-1">
+                              {language === 'en' ? '📋 Application Process' : '📋 आवेदन प्रक्रिया'}
+                            </h4>
+                            <ul className="space-y-2">
+                              {(language === 'en' ? scheme.stepsEn : scheme.stepsHi).map((step, idx) => (
+                                <li key={idx} className="flex items-start gap-3 text-gray-700">
+                                  <div className="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
+                                    {idx + 1}
+                                  </div>
+                                  <span className="mt-0.5">{step}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+
+                          {/* Documents Required */}
+                          {((language === 'en' ? scheme.documentsEn : scheme.documentsHi)?.length ?? 0) > 0 && (
+                            <div>
+                              <h4 className="font-semibold text-lg text-gray-800 mb-2 border-b pb-1">
+                                {language === 'en' ? '📝 Required Documents' : '📝 आवश्यक दस्तावेज़'}
+                              </h4>
+                              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                {(language === 'en' ? scheme.documentsEn : scheme.documentsHi)?.map((doc, idx) => (
+                                  <li key={idx} className="flex items-center gap-2 text-gray-700 bg-gray-50 p-2 rounded border">
+                                    <span className="text-green-500">✔</span>
+                                    <span>{doc}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {/* Eligibility Recap */}
+                          <div>
+                            <h4 className="font-semibold text-lg text-gray-800 mb-2 border-b pb-1">
+                              {language === 'en' ? '👥 Who is Eligible?' : '👥 कौन पात्र है?'}
+                            </h4>
+                            <p className="text-gray-700 p-3 bg-blue-50 rounded-lg">
+                              {language === 'en' ? scheme.eligibility : (scheme.eligibilityHi || scheme.eligibility)}
+                            </p>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
 
                   {/* Coverage Info */}
@@ -465,7 +646,7 @@ export default function GovernmentYojana() {
         </div>
 
         {/* Official Government Resources */}
-        <motion.div 
+        <motion.div
           className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-2xl p-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -479,21 +660,21 @@ export default function GovernmentYojana() {
               <div className="font-semibold text-green-700 mb-2">
                 🏛️ {language === 'en' ? 'National Health Authority' : 'राष्ट्रीय स्वास्थ्य प्राधिकरण'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('https://nha.gov.in/', '_blank')}
               >
                 {language === 'en' ? 'Visit Portal' : 'पोर्टल देखें'}
               </Button>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border border-green-200 hover:shadow-md transition-shadow">
               <div className="font-semibold text-green-700 mb-2">
                 🩺 {language === 'en' ? 'Ministry of Health & Family Welfare' : 'स्वास्थ्य और परिवार कल्याण मंत्रालय'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('https://mohfw.gov.in/', '_blank')}
               >
@@ -505,8 +686,8 @@ export default function GovernmentYojana() {
               <div className="font-semibold text-green-700 mb-2">
                 🏥 {language === 'en' ? 'PM-JAY Hospital Locator' : 'पीएम-जेएवाई अस्पताल लोकेटर'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('https://hospitals.pmjay.gov.in/', '_blank')}
               >
@@ -518,8 +699,8 @@ export default function GovernmentYojana() {
               <div className="font-semibold text-green-700 mb-2">
                 🩸 {language === 'en' ? 'e-RaktKosh Blood Bank' : 'ई-रक्तकोश रक्त बैंक'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('https://eraktkosh.mohfw.gov.in/', '_blank')}
               >
@@ -531,10 +712,10 @@ export default function GovernmentYojana() {
               <div className="font-semibold text-green-700 mb-2">
                 💊 {language === 'en' ? 'Janaushadhi Store Locator' : 'जनऔषधि स्टोर लोकेटर'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
-                onClick={() => window.open('https://janaushadhi.gov.in/KendraDetails.aspx', '_blank')}
+                onClick={() => window.open('https://janaushadhi.gov.in/near-by-kendra', '_blank')}
               >
                 {language === 'en' ? 'Find Stores' : 'स्टोर खोजें'}
               </Button>
@@ -544,8 +725,8 @@ export default function GovernmentYojana() {
               <div className="font-semibold text-green-700 mb-2">
                 🧠 {language === 'en' ? 'Tele-MANAS Portal' : 'टेली-मानस पोर्टल'}
               </div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('https://telemanas.mohfw.gov.in/', '_blank')}
               >
@@ -556,7 +737,7 @@ export default function GovernmentYojana() {
         </motion.div>
 
         {/* Emergency Helplines */}
-        <motion.div 
+        <motion.div
           className="mt-8 bg-red-50 border border-red-200 rounded-2xl p-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -571,50 +752,50 @@ export default function GovernmentYojana() {
                 {language === 'en' ? 'Medical Emergency' : 'चिकित्सा आपातकाल'}
               </div>
               <div className="text-2xl font-bold text-red-600 mb-2">108</div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('tel:108')}
               >
                 {language === 'en' ? 'Call Now' : 'अभी कॉल करें'}
               </Button>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border border-red-200 hover:shadow-md transition-shadow">
               <div className="font-semibold text-red-700 mb-1">
                 {language === 'en' ? 'Mental Health (Tele-MANAS)' : 'मानसिक स्वास्थ्य (टेली-मानस)'}
               </div>
               <div className="text-2xl font-bold text-red-600 mb-2">14416</div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('tel:14416')}
               >
                 {language === 'en' ? 'Call Now' : 'अभी कॉल करें'}
               </Button>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border border-red-200 hover:shadow-md transition-shadow">
               <div className="font-semibold text-red-700 mb-1">
                 {language === 'en' ? 'PM-JAY Helpline' : 'पीएम-जेएवाई हेल्पलाइन'}
               </div>
               <div className="text-2xl font-bold text-red-600 mb-2">14555</div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('tel:14555')}
               >
                 {language === 'en' ? 'Call Now' : 'अभी कॉल करें'}
               </Button>
             </div>
-            
+
             <div className="bg-white p-4 rounded-lg border border-red-200 hover:shadow-md transition-shadow">
               <div className="font-semibold text-red-700 mb-1">
                 {language === 'en' ? 'COVID-19 Helpline' : 'कोविड-19 हेल्पलाइन'}
               </div>
               <div className="text-2xl font-bold text-red-600 mb-2">1075</div>
-              <Button 
-                size="sm" 
+              <Button
+                size="sm"
                 variant="outline"
                 onClick={() => window.open('tel:1075')}
               >
@@ -625,14 +806,14 @@ export default function GovernmentYojana() {
         </motion.div>
 
         {/* Footer Info */}
-        <motion.div 
+        <motion.div
           className="mt-8 text-center text-gray-600"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <p className="text-sm">
-            {language === 'en' 
+            {language === 'en'
               ? '💡 For the most up-to-date information, please visit the official government websites or contact the respective helplines.'
               : '💡 नवीनतम जानकारी के लिए, कृपया आधिकारिक सरकारी वेबसाइटों पर जाएं या संबंधित हेल्पलाइन से संपर्क करें।'
             }
