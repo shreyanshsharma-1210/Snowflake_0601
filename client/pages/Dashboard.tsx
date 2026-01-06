@@ -179,7 +179,7 @@ export default function Dashboard() {
                   <p className="text-muted-foreground text-base max-w-md mx-auto mb-6 dashboard-text">
                     Here's your health snapshot. Access Government Yojana schemes, consult with doctors, and manage your health records all in one place.
                   </p>
-                  <div className="flex items-center justify-center gap-3">
+                  <div className="flex items-center justify-center gap-3 flex-wrap">
                     <Button
                       className="bg-gradient-to-r from-green-600 to-teal-500 text-white"
                       onClick={() => navigateToPage('/dashboard/clinical-profile')}
@@ -192,6 +192,30 @@ export default function Dashboard() {
                     >
                       Book Consultation
                     </Button>
+                    <label htmlFor="report-upload">
+                      <Button
+                        variant="outline"
+                        className="gap-2 cursor-pointer"
+                        asChild
+                      >
+                        <span>
+                          <UploadCloud className="w-4 h-4" />
+                          Upload Report
+                        </span>
+                      </Button>
+                      <input
+                        id="report-upload"
+                        type="file"
+                        className="hidden"
+                        accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            alert(`Report "${file.name}" uploaded successfully!`);
+                          }
+                        }}
+                      />
+                    </label>
                   </div>
                 </CardContent>
               </Card>
