@@ -16,6 +16,7 @@ import {
   Building2,
   FileText,
   Stethoscope,
+  Shield,
 } from "lucide-react";
 
 interface FloatingSidebarProps {
@@ -67,6 +68,12 @@ export const FloatingSidebar = ({
       label: "Ambulance and SOS",
       icon: Ambulance,
       href: "/dashboard/ambulance-services",
+    },
+    {
+      id: "insurance",
+      label: "Health Insurance",
+      icon: Shield,
+      href: "/dashboard/insurance",
     },
     {
       id: "clinical-profile",

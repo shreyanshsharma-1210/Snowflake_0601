@@ -33,6 +33,7 @@ import DriverLogin from "./pages/DriverLogin";
 import DriverDashboard from "./pages/DriverDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import DoctorAppointments from "./pages/DoctorAppointments";
+import HealthInsurance from "./pages/HealthInsurance";
 import { MiBandProvider } from "./miband/MiBandContext";
 
 // Suppress known Recharts defaultProps warning (filter both console.error and console.warn)
@@ -111,6 +112,7 @@ const App = () => (
               <Route path="/dashboard/mindspace" element={<MindSpace />} />
               <Route path="/dashboard/blood-bank" element={<BloodBank />} />
               <Route path="/dashboard/profile" element={<UserProfile />} />
+              <Route path="/dashboard/insurance" element={<HealthInsurance />} />
               <Route path="/dashboard/clinical-profile" element={<ClinicalProfile />} />
 
               {/* Driver Routes */}
