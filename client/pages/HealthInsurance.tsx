@@ -66,7 +66,7 @@ const POLICIES = [
             renewability: "Lifelong",
             copay: "20% if entry age > 60",
         },
-        applyUrl: "https://www.starhealth.in/health-insurance-plans/family-health-optima-insurance-plan"
+        applyUrl: "https://www.starhealth.in/lp/health-insurance/"
     },
     {
         id: "hdfc-optima",
@@ -162,7 +162,7 @@ const POLICIES = [
             renewability: "Lifelong",
             copay: "None",
         },
-        applyUrl: "https://www.nivabupa.com/health-insurance-plans/reassure-2-0.html"
+        applyUrl: "https://www.nivabupa.com/health-insurance/family-health-insurance-plans.html"
     },
 ];
 
